@@ -21,7 +21,7 @@ export function CardBalanceInformation() {
   }
 
   return (
-    <Card className="flex mt-2 w-fit shadow-lg">
+    <Card className="flex mt-2 w-full shadow-lg">
       <CardHeader>
         <div className="h-40 w-40">
           <DoughnutChart />
