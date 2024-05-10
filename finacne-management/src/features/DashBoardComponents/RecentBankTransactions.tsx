@@ -40,13 +40,13 @@ export function RecentBankTransactions() {
         </TabsList>
         <TabsContent value="Bank_Transactions">
           <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
+            <TableHeader className="bg-[#f9fafb]">
               <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="px-2">Status</TableHead>
+                <TableHead className="px-2">Trans Date</TableHead>
+                <TableHead className="px-2">Post Date</TableHead>
+                <TableHead className="px-2">Billing Amount</TableHead>
+                <TableHead className="px-2">Merchant Name</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -6,7 +6,6 @@ export function HomePage() {
     <section className="flex h-screen">
       <SideBar />
       <DashBoard />
-      <SideBar />
     </section>
   );
 }
