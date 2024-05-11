@@ -9,7 +9,7 @@ export function LeftSideBar() {
 
   function handleHomeNavigate() {
     setCurrentPage("Home");
-    navigate("/");
+    navigate("/home");
   }
 
   function handleHistoryNavigate() {
@@ -23,7 +23,7 @@ export function LeftSideBar() {
   }
 
   return (
-    <section className="sticky left-0 top-0 flex h-screen w-3/12 flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden">
+    <section className="sticky left-0 top-0 flex h-screen w-4/12 flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden">
       <nav className="flex flex-col gap-4">
         <div className="grid text-center">
           <Label className="text-black text-2xl font-bold">Ultium CAM</Label>

@@ -15,7 +15,7 @@ export function MobileNav() {
 
   function handleHomeNavigate() {
     setCurrentPage("Home");
-    navigate("/");
+    navigate("/home");
   }
 
   function handleHistoryNavigate() {
