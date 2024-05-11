@@ -1,11 +1,17 @@
 import { DashBoard } from "@/features/DashBoard";
-import { SideBar } from "@/features/SideBar";
+import { RightSideBar } from "@/features/RightSideBar";
+import { LeftSideBar } from "@/features/LeftSideBar";
+import { MobileNav } from "@/features/MobileNav";
 
 export function HomePage() {
   return (
-    <section className="flex h-screen">
-      <SideBar />
-      <DashBoard />
-    </section>
+    <>
+      <MobileNav />
+      <section className="flex h-screen">
+        <LeftSideBar />
+        <DashBoard />
+        <RightSideBar />
+      </section>
+    </>
   );
 }

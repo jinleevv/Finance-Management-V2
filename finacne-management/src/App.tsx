@@ -7,27 +7,22 @@ import {
 import "./App.css";
 import { useHooks } from "@/hooks";
 import { HomePage } from "./pages/HomePage";
+import { TransactionHistory } from "@/pages/TransactionHistory";
+import { UploadTransactions } from "@/pages/UploadTransactions";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 function App() {
-  const { logedInUser } = useHooks();
-
-  const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    if (!logedInUser) {
-      return <Navigate to="/" />;
-    } else {
-      return children;
-    }
-  };
 
   return (
     <>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
+          <Route path="/transaction-history" element={<TransactionHistory/>}></Route>
+          <Route path="/upload-transactions" element={<UploadTransactions/>}></Route>
         </Routes>
       </Router>
     </>

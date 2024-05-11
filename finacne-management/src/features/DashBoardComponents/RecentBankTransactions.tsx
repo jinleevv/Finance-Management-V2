@@ -1,65 +1,24 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { cn } from "@/lib/utils";
+import { BankDataTable } from "../BankDataTable/data-table";
+import { columns } from "../BankDataTable/columns";
 
 export function RecentBankTransactions() {
+  const data = getData();
+
+  function getData() {
+    // Fetch data from your API here.
+    return [
+      {
+        trans_date: new Date(),
+        post_date: new Date(),
+        billing_amount: 100,
+        merchant_name: "Jin",
+      },
+    ];
+  }
+
   return (
     <section className="flex w-full flex-col gap-6">
-      <Tabs className="w-full" defaultValue="Bank_Transactions">
-        <TabsList className="custom-scrollbar mb-8 flex w-full flex-nowrap bg-white justify-start">
-          <TabsTrigger
-            value="Bank_Transactions"
-            className="bg-white shadow-none border-0 p-0 justify-start items-start data-[state=active]:shadow-none"
-          >
-            <div
-              className={cn(`gap-[18px] border-b-2 flex transition-all`, {
-                "border-black": true,
-              })}
-            >
-              <p
-                className={cn(
-                  `text-16 line-clamp-1 flex-1 font-medium text-black`,
-                  {
-                    "text-black": true,
-                  }
-                )}
-              >
-                Official Bank Transactions
-              </p>
-            </div>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="Bank_Transactions">
-          <Table>
-            <TableHeader className="bg-[#f9fafb]">
-              <TableRow>
-                <TableHead className="px-2">Status</TableHead>
-                <TableHead className="px-2">Trans Date</TableHead>
-                <TableHead className="px-2">Post Date</TableHead>
-                <TableHead className="px-2">Billing Amount</TableHead>
-                <TableHead className="px-2">Merchant Name</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">INV001</TableCell>
-                <TableCell>Paid</TableCell>
-                <TableCell>Credit Card</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TabsContent>
-      </Tabs>
+      <BankDataTable columns={columns} data={data} />
     </section>
   );
 }
