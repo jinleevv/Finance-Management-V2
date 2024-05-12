@@ -20,6 +20,44 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
+interface CategoryBadgeProps {
+  category: any;
+}
+
+const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category }) => {
+  const status: string = category;
+  const categoryBadgeSuccess =
+    "flex w-[90px] h-8 gap-1 rounded-2xl border-[1.5px] p-3 border-success-600 bg-green-100";
+  const categoryBadgeFail =
+    "flex w-[105px] h-8 gap-1 rounded-2xl border-[1.5px] p-3 border-red-600 bg-red-100";
+
+  return (
+    <div
+      className={
+        status === "Matched" ? categoryBadgeSuccess : categoryBadgeFail
+      }
+    >
+      <div
+        className={
+          status === "Matched"
+            ? "size-2 rounded-full bg-green-600"
+            : "size-2 rounded-full bg-red-600"
+        }
+      >
+        <span
+          className={
+            status === "Matched"
+              ? "flex w-full ml-3 -mt-1.5 text-[12px] font-medium text-success-700"
+              : "flex w-full ml-3 -mt-1.5 text-[12px] font-medium text-red-700"
+          }
+        >
+          {category}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export function BankDataTable<TData, TValue>({
   columns,
   data,
@@ -31,7 +69,7 @@ export function BankDataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md h-full">
       <Tabs defaultValue="Bank_Transactions">
         <TabsList className="custom-scrollbar mb-8 flex w-full flex-nowrap bg-white justify-start">
           <TabsTrigger
@@ -85,9 +123,13 @@ export function BankDataTable<TData, TValue>({
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                        {cell.id.split("_")[1] === "status" ? (
+                          <CategoryBadge category={cell.getValue()} />
+                        ) : (
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
                         )}
                       </TableCell>
                     ))}

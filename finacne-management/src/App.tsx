@@ -7,7 +7,7 @@ import {
 import "./App.css";
 import { useHooks } from "@/hooks";
 import { HomePage } from "./pages/HomePage";
-import { TransactionHistory } from "@/pages/TransactionHistory";
+import { TransactionHistoryPage } from "@/pages/TransactionHistoryPage";
 import { UploadTransactions } from "@/pages/UploadTransactions";
 import { IntroductionPage } from "@/pages/IntroductionPage";
 import { LoginPage } from "@/pages/LoginPage";
@@ -28,7 +28,7 @@ function App() {
           <Route path="/home" element={<HomePage />}></Route>
           <Route
             path="/transaction-history"
-            element={<TransactionHistory />}
+            element={<TransactionHistoryPage />}
           ></Route>
           <Route
             path="/upload-transactions"

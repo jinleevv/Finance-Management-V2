@@ -1,7 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { BankTransactionsData } from "@/hooks";
+import { StatusBankTransactionsData } from "@/hooks";
 
-export const columns: ColumnDef<BankTransactionsData>[] = [
+export const StatusBankColumns: ColumnDef<StatusBankTransactionsData>[] = [
+  {
+    accessorKey: "status",
+    header: "Status",
+  },
   {
     accessorKey: "trans_date",
     header: "Trans Date",

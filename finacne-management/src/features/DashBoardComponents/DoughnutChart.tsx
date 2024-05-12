@@ -11,7 +11,7 @@ export function DoughnutChart() {
     datasets: [
       {
         data: [spentAmount, remainingAmount],
-        backgroundColor: ["#0747b6", "#ccc"], // Assuming a different color for the remaining amount
+        backgroundColor: ["#000000", "#ccc"], // Assuming a different color for the remaining amount
       },
     ],
     labels: [`Spent: $${spentAmount}`, `Remaining: $${remainingAmount}`],

@@ -1,7 +1,10 @@
 import { Label } from "@/components/ui/label";
 import { BankCard } from "./BankCard";
+import { useHooks } from "@/hooks";
 
 export function RightSideBar() {
+  const { userFullName, userEmail } = useHooks();
+
   return (
     <aside className="no-scrollbar hidden h-screen max-h-screen w-4/12 flex-col border-l border-gray-200 xl:flex xl:overflow-y-scroll !important">
       <section className="flex flex-col pb-8">
@@ -11,10 +14,8 @@ export function RightSideBar() {
               <span className="text-5xl font-bold text-black m-2.5">J</span>
             </div>
             <div className="flex flex-col pt-44">
-              <Label className="text-3xl font-bold">Jinwon Lee</Label>
-              <Label className="ml-1 text-xs text-gray-600">
-                jinwon.lee@ultiumcam.net
-              </Label>
+              <Label className="text-3xl font-bold">{userFullName}</Label>
+              <Label className="ml-1 text-xs text-gray-600">{userEmail}</Label>
             </div>
           </div>
         </div>

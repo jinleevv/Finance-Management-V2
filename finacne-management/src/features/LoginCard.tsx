@@ -32,7 +32,13 @@ const formSchema = z.object({
 export function LoginCard() {
   const navigate = useNavigate();
   const [invalidLogin, setInvalidLogin] = useState(false);
-  const { clientII, setLoggedInUser } = useHooks();
+  const {
+    clientI,
+    clientII,
+    setLoggedInUser,
+    calenderDate,
+    setStatusBankTableData,
+  } = useHooks();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -55,6 +61,14 @@ export function LoginCard() {
         })
         .catch(() => {
           setInvalidLogin(true);
+        });
+      await clientI
+        .post("/api/status-bank-transactions/", {
+          date_from: calenderDate.from.toISOString().split("T")[0],
+          date_to: calenderDate.to.toISOString().split("T")[0],
+        })
+        .then((res) => {
+          setStatusBankTableData(res.data.data);
         });
     } catch (error) {
       if (error.response.data["reason"] === "Non existing user") {

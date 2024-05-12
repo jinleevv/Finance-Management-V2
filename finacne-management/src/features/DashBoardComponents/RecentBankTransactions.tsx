@@ -1,24 +1,32 @@
-import { BankDataTable } from "../BankDataTable/data-table";
-import { columns } from "../BankDataTable/columns";
+import { BankDataTable } from "../StatusBankDataTable/data-table";
+import { StatusBankColumns } from "../StatusBankDataTable/columns";
+import { useHooks } from "@/hooks";
+import { useEffect } from "react";
 
 export function RecentBankTransactions() {
-  const data = getData();
+  const {
+    clientI,
+    currentPage,
+    calenderDate,
+    statusBankTableData,
+    setStatusBankTableData,
+  } = useHooks();
 
-  function getData() {
-    // Fetch data from your API here.
-    return [
-      {
-        trans_date: new Date(),
-        post_date: new Date(),
-        billing_amount: 100,
-        merchant_name: "Jin",
-      },
-    ];
-  }
+  useEffect(() => {
+    console.log(statusBankTableData);
+    clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        setStatusBankTableData(res.data.data);
+      });
+  }, [currentPage]);
 
   return (
-    <section className="flex w-full flex-col gap-6">
-      <BankDataTable columns={columns} data={data} />
+    <section className="flex w-full h-full flex-col gap-6 overflow-hidden">
+      <BankDataTable columns={StatusBankColumns} data={statusBankTableData} />
     </section>
   );
 }
