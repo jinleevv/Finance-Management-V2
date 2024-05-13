@@ -10,7 +10,7 @@ export function TransactionHistory() {
   return (
     <>
       <div className="w-full h-screen">
-        <div className="grid ml-10 mt-12 mr-10">
+        <div className="h-[800px] ml-10 mt-12 mr-10">
           <Label className="text-2xl font-bold ">
             Uploaded Transactions History
           </Label>

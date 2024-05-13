@@ -250,7 +250,7 @@ export function MyDataTable<TData1, TData2, TValue>({
   }
 
   return (
-    <div className="rounded-md">
+    <div className="rounded-md h-full overflow-auto">
       <Tabs defaultValue="My_Transactions" onValueChange={handleTabChange}>
         <div className="flex gap-1 mt-8 mb-4 justify-end">
           <Popover>

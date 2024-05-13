@@ -35,7 +35,7 @@ export type DateRangeType = {
 };
 
 const initialFromDate = startOfMonth(new Date());
-const initialToDate = new Date("2024-05-27");
+const initialToDate = new Date();
 
 const dateAtom = atomWithImmer<DateRange | undefined>({
   from: initialFromDate,
