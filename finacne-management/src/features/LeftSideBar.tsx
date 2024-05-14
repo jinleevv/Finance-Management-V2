@@ -1,22 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useHooks } from "@/hooks";
-import { startOfMonth } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LeftSideBar() {
-  const {
-    clientII,
-    currentPage,
-    setMyTableData,
-    setCalenderDate,
-    setCurrentPage,
-  } = useHooks();
+  const { clientII, currentPage, setMyTableData, setCurrentPage } = useHooks();
   const navigate = useNavigate();
 
   function handleHomeNavigate() {
-    setCurrentPage("Home");
+    setCurrentPage("/home");
     navigate("/home");
   }
 
@@ -29,16 +22,12 @@ export function LeftSideBar() {
       .catch(() => {
         toast("Unable to update the table");
       });
-    setCalenderDate({
-      from: startOfMonth(new Date()),
-      to: new Date(),
-    });
-    setCurrentPage("Transaction History");
+    setCurrentPage("/transaction-history");
     navigate("/transaction-history");
   }
 
   function handleUploadNavigate() {
-    setCurrentPage("Upload Transactions");
+    setCurrentPage("/upload-transactions");
     navigate("/upload-transactions");
   }
 

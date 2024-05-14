@@ -37,7 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DateRange } from "react-day-picker";
 import { format, startOfMonth } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useHooks } from "@/hooks";
 import { saveAs } from "file-saver";
@@ -103,6 +103,7 @@ export function MyDataTable<TData1, TData2, TValue>({
     userLastName,
     calenderDate,
     statusBankTableData,
+    setStatusBankTableData,
     setCalenderDate,
     setMyTableData,
   } = useHooks();
@@ -115,6 +116,13 @@ export function MyDataTable<TData1, TData2, TValue>({
   });
   const [myTabSelected, setMyTabSelected] = useState<boolean>(true);
   const [bankTabSelected, setBankTabSelected] = useState<boolean>(false);
+
+  useEffect(() => {
+    setDate({
+      from: calenderDate.from,
+      to: calenderDate.to,
+    });
+  }, [calenderDate]);
 
   const table = useReactTable({
     data: data1,
@@ -202,6 +210,18 @@ export function MyDataTable<TData1, TData2, TValue>({
       })
       .then((res) => {
         setMyTableData(res.data);
+      })
+      .catch(() => {
+        toast("Unable to filter by given dates");
+      });
+
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: date.from.toISOString().split("T")[0],
+        date_to: date.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        setStatusBankTableData(res.data.data);
       })
       .catch(() => {
         toast("Unable to filter by given dates");
