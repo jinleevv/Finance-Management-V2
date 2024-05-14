@@ -5,7 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LeftSideBar() {
-  const { clientII, currentPage, setMyTableData, setCurrentPage } = useHooks();
+  const {
+    clientI,
+    calenderDate,
+    currentPage,
+    userFirstName,
+    userLastName,
+    setMyTableData,
+    setCurrentPage,
+  } = useHooks();
   const navigate = useNavigate();
 
   function handleHomeNavigate() {
@@ -14,8 +22,13 @@ export function LeftSideBar() {
   }
 
   async function handleHistoryNavigate() {
-    await clientII
-      .get("/api/card-transaction-history/")
+    await clientI
+      .post("/api/card-transaction-history/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
       .then((res) => {
         setMyTableData(res.data);
       })

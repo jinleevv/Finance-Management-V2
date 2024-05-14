@@ -61,13 +61,14 @@ export function MyDataTable<TData1, TData2, TValue>({
 }: DataTableProps<TData1, TData2, TValue>) {
   const {
     clientI,
-    clientII,
     userFirstName,
     userLastName,
     calenderDate,
+    transactionHistoryTab,
     setStatusBankTableData,
     setCalenderDate,
     setMyTableData,
+    setTransactionHistoryTab,
   } = useHooks();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -84,7 +85,14 @@ export function MyDataTable<TData1, TData2, TValue>({
       from: calenderDate.from,
       to: calenderDate.to,
     });
-  }, [calenderDate]);
+    if (transactionHistoryTab === "My_Transactions") {
+      handleTabChange("My_Transactions");
+      setTransactionHistoryTab("My_Transactions");
+    } else {
+      handleTabChange("Bank_Transactions");
+      setTransactionHistoryTab("Bank_Transactions");
+    }
+  }, [calenderDate, transactionHistoryTab]);
 
   const table = useReactTable({
     data: data1,
@@ -144,10 +152,19 @@ export function MyDataTable<TData1, TData2, TValue>({
         headers: { "Content-Type": "application/json" },
       })
       .then(() => {
-        clientII
-          .get("/api/card-transaction-history/", {
-            headers: { "Content-Type": "application/json" },
-          })
+        clientI
+          .post(
+            "/api/card-transaction-history/",
+            {
+              date_from: calenderDate.from.toISOString().split("T")[0],
+              date_to: calenderDate.to.toISOString().split("T")[0],
+              first_name: userFirstName,
+              last_name: userLastName,
+            },
+            {
+              headers: { "Content-Type": "application/json" },
+            }
+          )
           .then((res) => {
             setMyTableData(res.data);
           })
@@ -158,7 +175,7 @@ export function MyDataTable<TData1, TData2, TValue>({
       .catch(() => toast("Unable to delete the data"));
   }
 
-  async function handleFilterByDates() {
+  async function handleFilterByDatesMyTab() {
     const data = JSON.stringify({
       date_from: date.from.toISOString().split("T")[0],
       date_to: date.to.toISOString().split("T")[0],
@@ -193,6 +210,47 @@ export function MyDataTable<TData1, TData2, TValue>({
       from: date.from,
       to: date.to,
     });
+
+    setTransactionHistoryTab("My_Transactions");
+  }
+
+  async function handleFilterByDatesBankTab() {
+    const data = JSON.stringify({
+      date_from: date.from.toISOString().split("T")[0],
+      date_to: date.to.toISOString().split("T")[0],
+      first_name: userFirstName,
+      last_name: userLastName,
+    });
+
+    await clientI
+      .post("/api/filter-by-dates/", data, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((res) => {
+        setMyTableData(res.data);
+      })
+      .catch(() => {
+        toast("Unable to filter by given dates");
+      });
+
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: date.from.toISOString().split("T")[0],
+        date_to: date.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        setStatusBankTableData(res.data.data);
+      })
+      .catch(() => {
+        toast("Unable to filter by given dates");
+      });
+
+    setCalenderDate({
+      from: date.from,
+      to: date.to,
+    });
+
+    setTransactionHistoryTab("Bank_Transactions");
   }
 
   function handleEditError() {
@@ -233,7 +291,10 @@ export function MyDataTable<TData1, TData2, TValue>({
 
   return (
     <div className="rounded-md h-full overflow-auto">
-      <Tabs defaultValue="My_Transactions" onValueChange={handleTabChange}>
+      <Tabs
+        defaultValue={transactionHistoryTab}
+        onValueChange={handleTabChange}
+      >
         <div className="flex gap-1 mt-8 mb-4 justify-end">
           <Popover>
             <PopoverTrigger asChild>
@@ -271,7 +332,11 @@ export function MyDataTable<TData1, TData2, TValue>({
               />
             </PopoverContent>
           </Popover>
-          <Button onClick={handleFilterByDates}>Search</Button>
+          {myTabSelected ? (
+            <Button onClick={handleFilterByDatesMyTab}>Search</Button>
+          ) : (
+            <Button onClick={handleFilterByDatesBankTab}>Search</Button>
+          )}
         </div>
         <TabsList className="custom-scrollbar mb-8 flex w-full flex-nowrap bg-white justify-between">
           <div className="space-x-3">

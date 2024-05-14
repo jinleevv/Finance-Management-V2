@@ -53,6 +53,7 @@ const myTableDataAtom = atomWithImmer<Array<MyTransactionsData>>([]);
 const statusBankTableDataAtom = atomWithImmer<
   Array<StatusBankTransactionsData>
 >([]);
+const transactionHistoryTabAtom = atomWithImmer<string>("My_Transactions");
 
 export function useHooks() {
   const clientI = axios.create({
@@ -78,6 +79,9 @@ export function useHooks() {
     statusBankTableDataAtom
   );
   const [calenderDate, setCalenderDate] = useAtom(dateAtom);
+  const [transactionHistoryTab, setTransactionHistoryTab] = useAtom(
+    transactionHistoryTabAtom
+  );
 
   return {
     clientI,
@@ -103,5 +107,7 @@ export function useHooks() {
     setStatusBankTableData,
     calenderDate,
     setCalenderDate,
+    transactionHistoryTab,
+    setTransactionHistoryTab,
   };
 }
