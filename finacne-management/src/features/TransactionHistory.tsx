@@ -11,7 +11,7 @@ export function TransactionHistory() {
     <>
       <div className="w-full h-screen">
         <div className="h-[800px] ml-10 mt-12 mr-10">
-          <Label className="text-2xl font-bold ">
+          <Label className="text-2xl font-bold">
             Uploaded Transactions History
           </Label>
           <MyDataTable columns1={columns} data1={myTableData} columns2={StatusBankColumns} data2={statusBankTableData} />

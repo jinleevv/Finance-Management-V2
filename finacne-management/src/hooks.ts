@@ -43,12 +43,12 @@ const dateAtom = atomWithImmer<DateRange | undefined>({
 });
 
 const loggedInUserAtom = atomWithImmer<boolean>(false);
-const currentPageAtom = atomWithImmer<String>("Home");
-const firstNameAtom = atomWithImmer<String>("");
-const lastNameAtom = atomWithImmer<String>("");
-const fullNameAtom = atomWithImmer<String>("");
-const userEmailAtom = atomWithImmer<String>("");
-const userDepartmentAtom = atomWithImmer<String>("");
+const currentPageAtom = atomWithImmer<string>("Home");
+const firstNameAtom = atomWithImmer<string>("");
+const lastNameAtom = atomWithImmer<string>("");
+const fullNameAtom = atomWithImmer<string>("");
+const userEmailAtom = atomWithImmer<string>("");
+const userDepartmentAtom = atomWithImmer<string>("");
 const myTableDataAtom = atomWithImmer<Array<MyTransactionsData>>([]);
 const statusBankTableDataAtom = atomWithImmer<
   Array<StatusBankTransactionsData>
