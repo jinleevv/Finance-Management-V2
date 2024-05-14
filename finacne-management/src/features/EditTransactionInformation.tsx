@@ -142,7 +142,7 @@ export function EditTransactionInformation({
               Edit
             </Button>
           </DialogTrigger>
-          <DialogContent className=" max-w-[820px] rounded-2xl">
+          <DialogContent className="max-w-[820px] rounded-2xl">
             <DialogHeader>
               <DialogTitle>Edit Transaction Information</DialogTitle>
               <DialogDescription>

@@ -17,7 +17,7 @@ export function HomePage() {
   return (
     <>
       <MobileNav />
-      <section className="flex h-screen">
+      <section className="flex w-full h-screen">
         <LeftSideBar />
         <DashBoard />
         <RightSideBar />

@@ -8,7 +8,7 @@ export function DashBoard() {
   const { userFullName } = useHooks();
   return (
     <div className="w-full h-screen">
-      <div className="grid ml-10 mt-12 mr-10">
+      <div className="grid w-full mt-12 pl-10 pr-10">
         <Label className="text-3xl">
           Welcome, <span>{userFullName}</span>
         </Label>

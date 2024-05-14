@@ -21,18 +21,18 @@ export function CardBalanceInformation() {
   }
 
   return (
-    <Card className="flex mt-2 w-full shadow-lg">
+    <Card className="lg:flex mt-2 w-full shadow-lg">
       <CardHeader>
         <div className="h-40 w-40">
           <DoughnutChart />
         </div>
       </CardHeader>
-      <CardContent className="mt-6">
-        <div>
+      <CardContent className="grid w-full mt-6">
+        <div className="w-full">
           <CardTitle className="text-2xl">Current Balance</CardTitle>
           <CardDescription>Corporate Credit Card Limit: $3,000</CardDescription>
         </div>
-        <div className="flex mt-5 space-x-5">
+        <div className="flex w-full mt-5 space-x-5">
           <Label className="text-md font-bold space-x-1">
             <span>Current Balance:</span>
             <CountUp

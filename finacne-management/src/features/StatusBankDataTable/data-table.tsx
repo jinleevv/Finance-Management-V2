@@ -87,7 +87,10 @@ export function BankDataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {cell.id.split("_")[1] === "status" ? (
-                          <CategoryBadge category={cell.getValue()} />
+                          <CategoryBadge
+                            category={cell.getValue()}
+                            rowData={row}
+                          />
                         ) : (
                           flexRender(
                             cell.column.columnDef.cell,
