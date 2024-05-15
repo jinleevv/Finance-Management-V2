@@ -34,6 +34,17 @@ export type DateRangeType = {
   to: string;
 };
 
+export type CountCategoryType = {
+  name: string;
+  count: number;
+};
+
+export type TopCategoriesType = {
+  first: CountCategoryType;
+  second: CountCategoryType;
+  third: CountCategoryType;
+};
+
 const initialFromDate = startOfMonth(new Date());
 const initialToDate = new Date();
 
@@ -54,6 +65,11 @@ const statusBankTableDataAtom = atomWithImmer<
   Array<StatusBankTransactionsData>
 >([]);
 const transactionHistoryTabAtom = atomWithImmer<string>("My_Transactions");
+const topCategoriesAtom = atomWithImmer<TopCategoriesType>({
+  first: { name: "default", count: 100 },
+  second: { name: "default", count: 50 },
+  third: { name: "default", count: 70 },
+});
 
 export function useHooks() {
   const clientI = axios.create({
@@ -82,6 +98,7 @@ export function useHooks() {
   const [transactionHistoryTab, setTransactionHistoryTab] = useAtom(
     transactionHistoryTabAtom
   );
+  const [topCategories, setTopCatetories] = useAtom(topCategoriesAtom);
 
   return {
     clientI,
@@ -109,5 +126,7 @@ export function useHooks() {
     setCalenderDate,
     transactionHistoryTab,
     setTransactionHistoryTab,
+    topCategories,
+    setTopCatetories,
   };
 }

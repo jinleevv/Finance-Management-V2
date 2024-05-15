@@ -1,9 +1,32 @@
 import { Label } from "@/components/ui/label";
 import { BankCard } from "./BankCard";
 import { useHooks } from "@/hooks";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 export function RightSideBar() {
-  const { userFullName, userEmail } = useHooks();
+  const { clientII, userFullName, userEmail, topCategories, setTopCatetories } =
+    useHooks();
+
+  async function handleTopCategories() {
+    await clientII.get("/api/top-categories-count/").then((res) => {
+      setTopCatetories({
+        first: {
+          name: res.data[0].category,
+          count: (res.data[0].count / res.data.total) * 100,
+        },
+        second: {
+          name: res.data[1].category,
+          count: (res.data[1].count / res.data.total) * 100,
+        },
+        third: {
+          name: res.data[2].category,
+          count: (res.data[2].count / res.data.total) * 100,
+        },
+      });
+    });
+    console.log(topCategories);
+  }
 
   return (
     <aside className="no-scrollbar hidden h-screen max-h-screen w-4/12 flex-col border-l border-gray-200 xl:flex xl:overflow-y-scroll !important">
@@ -24,7 +47,41 @@ export function RightSideBar() {
         <Label className="ml-3 text-2xl font-bold">My Card </Label>
         <BankCard />
       </section>
-      <section>hi</section>
+      <section className="mt-10 ml-3 mr-3 border-t">
+        <div className="flex mt-8 justify-between">
+          <Label className="text-2xl font-bold">My Usage</Label>
+          <Button size="sm" onClick={handleTopCategories}>
+            Check
+          </Button>
+        </div>
+        <div className="space-y-5">
+          <Label className="text-sm">Top Categories</Label>
+          <div className="rounded-md border p-3">
+            <div className="grid space-y-3">
+              <Label className="text-sm overflow-auto">
+                {topCategories.first.name}
+              </Label>
+              <Progress value={topCategories.first.count} className="h-2" />
+            </div>
+          </div>
+          <div className="rounded-md border p-3">
+            <div className="grid space-y-3">
+              <Label className="text-sm overflow-auto">
+                {topCategories.second.name}
+              </Label>
+              <Progress value={topCategories.second.count} className="h-2" />
+            </div>
+          </div>
+          <div className="rounded-md border p-3">
+            <div className="grid space-y-3">
+              <Label className="text-sm overflow-auto">
+                {topCategories.third.name}
+              </Label>
+              <Progress value={topCategories.third.count} className="h-2" />
+            </div>
+          </div>
+        </div>
+      </section>
     </aside>
   );
 }
