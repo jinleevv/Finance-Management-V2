@@ -35,6 +35,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useHooks } from "@/hooks";
+import { toast } from "sonner";
 
 interface CategoryBadgeProps {
   category: any;
@@ -58,6 +60,14 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+  const {
+    clientI,
+    userFirstName,
+    userLastName,
+    userDepartment,
+    calenderDate,
+    setStatusBankTableData,
+  } = useHooks();
   const fileRef = form.register("file");
   const [checked, setChecked] = useState(false);
   const [submitValuesElement, setSubmitValuesElement] = useState(<div></div>);
@@ -108,7 +118,73 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    try {
+      const lastDotIndex = values.file[0].name.lastIndexOf(".");
+
+      let extension = "";
+      let filename = "";
+      if (lastDotIndex !== -1) {
+        extension = values.file[0].name.substring(lastDotIndex + 1);
+      }
+
+      if (extension === "pdf") {
+        filename =
+          row_contents.trans_date +
+          "__" +
+          row_contents.amount +
+          "__" +
+          row_contents.merchant_name +
+          ".pdf";
+      } else {
+        filename =
+          row_contents.trans_date +
+          "__" +
+          row_contents.amount +
+          "__" +
+          row_contents.merchant_name +
+          ".jpg";
+      }
+
+      let data = new FormData();
+      data.append("date", row_contents.trans_date);
+      data.append("file", values.file[0], filename);
+      data.append("billing_amount", values.billing_amount);
+      data.append("tps", values.tps);
+      data.append("tvq", values.tvq);
+      data.append("merchant_name", row_contents.merchant_name);
+      data.append("purpose", values.purpose.replaceAll("\n", ", "));
+      data.append("first_name", userFirstName);
+      data.append("last_name", userLastName);
+      data.append("category", values.category);
+      data.append("attendees", values.attendees.replaceAll("\n", ", "));
+      data.append("project", values.project);
+      data.append("department", userDepartment);
+
+      await clientI
+        .post("/api/card-transaction-upload/", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then(() => {
+          toast("Transaction history has been Updated", {
+            description: new Date().toISOString(),
+          });
+        })
+        .catch(() => toast.error("Updating the transaction history failed"));
+    } catch (error) {
+      toast("Updating the transaction history failed");
+    }
+
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        setStatusBankTableData(res.data.data);
+      })
+      .catch(() => {
+        toast("Unable to filter by given dates");
+      });
   }
 
   return (

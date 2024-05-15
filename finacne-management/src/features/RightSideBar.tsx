@@ -24,6 +24,7 @@ export function RightSideBar() {
         <Label className="ml-3 text-2xl font-bold">My Card </Label>
         <BankCard />
       </section>
+      <section>hi</section>
     </aside>
   );
 }

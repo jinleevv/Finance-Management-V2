@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { useHooks } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { Footer } from "@/features/Footer";
 
 export function LeftSideBar() {
   const {
@@ -122,6 +123,8 @@ export function LeftSideBar() {
           )}
         </div>
       </nav>
+
+      <Footer />
     </section>
   );
 }
