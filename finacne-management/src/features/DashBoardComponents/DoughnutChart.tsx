@@ -1,20 +1,27 @@
+import { useHooks } from "@/hooks";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export function DoughnutChart() {
-  const spentAmount = 200;
-  const remainingAmount = 3000 - spentAmount;
+interface DoughnutChartType {
+  currentBalance: number;
+  remainingBalance: number;
+}
 
+export function DoughnutChart({
+  currentBalance,
+  remainingBalance,
+}: DoughnutChartType) {
   const data = {
     datasets: [
       {
-        data: [spentAmount, remainingAmount],
+        data: [currentBalance, remainingBalance],
         backgroundColor: ["#000000", "#ccc"], // Assuming a different color for the remaining amount
       },
     ],
-    labels: [`Spent: $${spentAmount}`, `Remaining: $${remainingAmount}`],
+    labels: [`Spent: $${currentBalance}`, `Remaining: $${remainingBalance}`],
   };
 
   return (

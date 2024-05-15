@@ -8,6 +8,17 @@ axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 axios.defaults.withCredentials = true;
 
+export const DepartmentBalance = {
+  President: "10000",
+  Finance: "10000",
+  HR: "10000",
+  Marketing: "10000",
+  IT: "10000",
+  Procurement: "10000",
+  Construction: "10000",
+  Admin: "10000",
+};
+
 export type MyTransactionsData = {
   trans_date: Date;
   billing_amount: number;
@@ -82,6 +93,8 @@ const topCategoriesAtom = atomWithImmer<TopCategoriesType>({
   second: { name: "default", count: 50 },
   third: { name: "default", count: 70 },
 });
+// const currentBalanceAtom = atomWithImmer<number>(0);
+// const remainingBalanceAtom = atomWithImmer<number>(10000);
 
 export function useHooks() {
   const clientI = axios.create({
@@ -114,6 +127,8 @@ export function useHooks() {
     transactionHistoryTabAtom
   );
   const [topCategories, setTopCatetories] = useAtom(topCategoriesAtom);
+  // const [currentBalance, setCurrentBalance] = useAtom(currentBalanceAtom);
+  // const [remainingBalance, setRemainingBalance] = useAtom(remainingBalanceAtom);
 
   return {
     clientI,
