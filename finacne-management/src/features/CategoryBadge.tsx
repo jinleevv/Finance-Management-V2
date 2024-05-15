@@ -178,6 +178,8 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
       .post("/api/status-bank-transactions/", {
         date_from: calenderDate.from.toISOString().split("T")[0],
         date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
       })
       .then((res) => {
         setStatusBankTableData(res.data.data);

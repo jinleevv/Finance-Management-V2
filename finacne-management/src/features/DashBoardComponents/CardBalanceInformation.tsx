@@ -15,6 +15,7 @@ export function CardBalanceInformation() {
   const { clientI, userDepartment } = useHooks();
   const [currentBalance, setCurrentBalance] = useState<number>(10000);
   const [remainingBalance, setRemainingBalance] = useState<number>(10000);
+
   function formatAmount(amount: number) {
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -28,7 +29,7 @@ export function CardBalanceInformation() {
   useEffect(() => {
     clientI.get("/api/department-credit-balance/").then((res) => {
       const amount = remainingBalance - res.data[userDepartment];
-      if (amount !== remainingBalance) {
+      if (amount !== currentBalance) {
         setRemainingBalance(amount);
         setCurrentBalance(res.data[userDepartment]);
       }
@@ -57,7 +58,7 @@ export function CardBalanceInformation() {
             <span>Current Balance:</span>
             <CountUp
               decimals={2}
-              decimal=","
+              decimal="."
               prefix="$"
               end={currentBalance}
               duration={1}
@@ -67,7 +68,7 @@ export function CardBalanceInformation() {
             <span>Remaining Balance:</span>
             <CountUp
               decimals={2}
-              decimal=","
+              decimal="."
               prefix="$"
               end={remainingBalance}
               duration={1}

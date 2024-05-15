@@ -3,9 +3,16 @@ import { CardBalanceInformation } from "@/features/DashBoardComponents/CardBalan
 import { RecentBankTransactions } from "./DashBoardComponents/RecentBankTransactions";
 import { Button } from "@/components/ui/button";
 import { useHooks } from "@/hooks";
+import { useNavigate } from "react-router-dom";
 
 export function DashBoard() {
-  const { userFullName } = useHooks();
+  const { userFullName, setCurrentPage } = useHooks();
+  const navigate = useNavigate();
+
+  function handleViewAll() {
+    setCurrentPage("/transaction-history");
+    navigate("/transaction-history");
+  }
   return (
     <div className="w-full h-screen">
       <div className="grid w-full mt-12 pl-10 pr-10">
@@ -17,10 +24,12 @@ export function DashBoard() {
         </Label>
         <CardBalanceInformation />
       </div>
-      <div className="grid h-[470px] ml-10 mt-12 mr-10">
+      <div className="h-[450px] ml-10 mt-12 mr-10">
         <div className="flex justify-between">
           <Label className="text-2xl">Recent transactions</Label>
-          <Button variant="outline">View All</Button>
+          <Button variant="outline" onClick={handleViewAll}>
+            View All
+          </Button>
         </div>
         <RecentBankTransactions />
       </div>

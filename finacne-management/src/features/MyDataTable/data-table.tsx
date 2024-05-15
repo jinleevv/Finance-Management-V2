@@ -198,6 +198,8 @@ export function MyDataTable<TData1, TData2, TValue>({
       .post("/api/status-bank-transactions/", {
         date_from: date.from.toISOString().split("T")[0],
         date_to: date.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
       })
       .then((res) => {
         setStatusBankTableData(res.data.data);
@@ -237,6 +239,8 @@ export function MyDataTable<TData1, TData2, TValue>({
       .post("/api/status-bank-transactions/", {
         date_from: date.from.toISOString().split("T")[0],
         date_to: date.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
       })
       .then((res) => {
         setStatusBankTableData(res.data.data);
