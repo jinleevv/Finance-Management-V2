@@ -4,7 +4,7 @@ import { useHooks } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Footer } from "@/features/Footer";
-import { LuBanknote, LuDownload, LuHistory } from "react-icons/lu";
+import { LuBanknote, LuDownload, LuHistory, LuAxe } from "react-icons/lu";
 
 export function LeftSideBar() {
   const {
@@ -67,6 +67,11 @@ export function LeftSideBar() {
         navigate("/bank-transaction-history");
       })
       .catch(() => toast("Error: Cannot load the page"));
+  }
+
+  function handleCreateAccountNavigate() {
+    setCurrentPage("/create-account");
+    navigate("/create-account");
   }
 
   return (
@@ -213,6 +218,37 @@ export function LeftSideBar() {
                   <LuHistory size={25} />
                   <span className="w-full font-semibold text-black-2 max-xl:hidden">
                     Bank Transaction History
+                  </span>
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {userDepartment === "Finance" || "Admin" ? (
+          <div className="mt-5">
+            <div className="ml-2 mr-2 border-t"></div>
+            <div className="mt-6 pl-2 pr-2 space-y-2">
+              {currentPage === "/create-account" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleCreateAccountNavigate}
+                >
+                  <LuAxe size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Create Account
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleCreateAccountNavigate}
+                >
+                  <LuAxe size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Create Account
                   </span>
                 </Button>
               )}

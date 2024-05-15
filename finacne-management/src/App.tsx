@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { UploadBankTransactionsPage } from "@/pages/UploadBankTransactionsPage";
 import { DownloadTransactionsPage } from "@/pages/DownloadTransactionsPage";
 import { BankTransactionHistoryPage } from "@/pages/BankTransactionHistoryPage";
+import { CreateAccountPage } from "@/pages/CreateAccountPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -146,6 +147,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <BankTransactionHistoryPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/create-account"
+            element={
+              <ProtectedRoute>
+                <CreateAccountPage />
               </ProtectedRoute>
             }
           ></Route>
