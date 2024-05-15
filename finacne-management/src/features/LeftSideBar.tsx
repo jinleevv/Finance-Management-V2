@@ -4,6 +4,7 @@ import { useHooks } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Footer } from "@/features/Footer";
+import { LuBanknote, LuDownload, LuHistory } from "react-icons/lu";
 
 export function LeftSideBar() {
   const {
@@ -12,6 +13,8 @@ export function LeftSideBar() {
     currentPage,
     userFirstName,
     userLastName,
+    userDepartment,
+    setEntireBankTableDate,
     setMyTableData,
     setCurrentPage,
   } = useHooks();
@@ -43,6 +46,27 @@ export function LeftSideBar() {
   function handleUploadNavigate() {
     setCurrentPage("/upload-transactions");
     navigate("/upload-transactions");
+  }
+
+  function handleUploadBankTransactionNavigate() {
+    setCurrentPage("/upload-bank-transactions");
+    navigate("/upload-bank-transactions");
+  }
+
+  function handleDownloadTransactionsNavigate() {
+    setCurrentPage("/download-transactions");
+    navigate("/download-transactions");
+  }
+
+  async function handleBankTransactionHistoryNavigate() {
+    await clientI
+      .get("/api/upload-bank-transaction-list/")
+      .then((res) => {
+        setEntireBankTableDate(res.data);
+        setCurrentPage("/bank-transaction-history");
+        navigate("/bank-transaction-history");
+      })
+      .catch(() => toast("Error: Cannot load the page"));
   }
 
   return (
@@ -122,6 +146,81 @@ export function LeftSideBar() {
             </Button>
           )}
         </div>
+        {userDepartment === "Finance" || "Admin" ? (
+          <div className="mt-5">
+            <div className="ml-2 mr-2 border-t"></div>
+            <div className="mt-6 pl-2 pr-2 space-y-2">
+              {currentPage === "/upload-bank-transactions" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleUploadBankTransactionNavigate}
+                >
+                  <LuBanknote size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Upload Bank Transactions
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleUploadBankTransactionNavigate}
+                >
+                  <LuBanknote size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Upload Bank Transactions
+                  </span>
+                </Button>
+              )}
+              {currentPage === "/download-transactions" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleDownloadTransactionsNavigate}
+                >
+                  <LuDownload size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Download Transactions
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleDownloadTransactionsNavigate}
+                >
+                  <LuDownload size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Download Transactions
+                  </span>
+                </Button>
+              )}
+              {currentPage === "/bank-transactions-history" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleBankTransactionHistoryNavigate}
+                >
+                  <LuHistory size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Bank Transaction History
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleBankTransactionHistoryNavigate}
+                >
+                  <LuHistory size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Bank Transaction History
+                  </span>
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </nav>
 
       <Footer />

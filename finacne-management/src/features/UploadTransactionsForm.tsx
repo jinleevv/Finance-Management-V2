@@ -197,14 +197,14 @@ export function UploadTransactionsForm() {
     }
   }
   return (
-    <section className="w-full sm:w-full xsm:w-full m-auto mt-20 sm:mt-0 xsm:mt-0">
-      <div className="h-full ml-10 mt-12 mr-10">
+    <section className="w-full m-auto mt-0">
+      <div className="h-full mt-12 ml-10 mr-10">
         <Label className="grid text-2xl font-bold">
           Corporate Card Transaction Upload Form
         </Label>
         <Label className="ml-1">Corporate Card Transaction Information</Label>
       </div>
-      <div className="h-full ml-10 mt-12 mr-10">
+      <div className="h-full mt-12 ml-10 mr-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full">
             <div>
@@ -531,7 +531,7 @@ export function UploadTransactionsForm() {
                 <DialogTrigger asChild>
                   <Button onClick={handleFormValues}>Submit</Button>
                 </DialogTrigger>
-                <DialogContent className="w-full rounded-lg">
+                <DialogContent className="rounded-lg sm:max-w-[625px]">
                   <DialogHeader>
                     <DialogTitle>Corporate Card Transaction Form</DialogTitle>
                     <DialogDescription>

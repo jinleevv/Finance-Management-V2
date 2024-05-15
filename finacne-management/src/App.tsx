@@ -13,6 +13,9 @@ import { IntroductionPage } from "@/pages/IntroductionPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { Toaster, toast } from "sonner";
 import { useEffect } from "react";
+import { UploadBankTransactionsPage } from "@/pages/UploadBankTransactionsPage";
+import { DownloadTransactionsPage } from "@/pages/DownloadTransactionsPage";
+import { BankTransactionHistoryPage } from "@/pages/BankTransactionHistoryPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -115,6 +118,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <UploadTransactions />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/upload-bank-transactions"
+            element={
+              <ProtectedRoute>
+                <UploadBankTransactionsPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/download-transactions"
+            element={
+              <ProtectedRoute>
+                <DownloadTransactionsPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/bank-transaction-history"
+            element={
+              <ProtectedRoute>
+                <BankTransactionHistoryPage />
               </ProtectedRoute>
             }
           ></Route>

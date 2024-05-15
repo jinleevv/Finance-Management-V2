@@ -29,6 +29,15 @@ export type StatusBankTransactionsData = {
   merchant_name: string;
 };
 
+export type EntireBankTransactionsData = {
+  trans_date: Date;
+  post_date: Date;
+  billing_amount: number;
+  merchant_name: string;
+  first_name: string;
+  last_name: string;
+};
+
 export type DateRangeType = {
   from: string;
   to: string;
@@ -64,6 +73,9 @@ const myTableDataAtom = atomWithImmer<Array<MyTransactionsData>>([]);
 const statusBankTableDataAtom = atomWithImmer<
   Array<StatusBankTransactionsData>
 >([]);
+const entireBankTableDataAtom = atomWithImmer<
+  Array<EntireBankTransactionsData>
+>([]);
 const transactionHistoryTabAtom = atomWithImmer<string>("My_Transactions");
 const topCategoriesAtom = atomWithImmer<TopCategoriesType>({
   first: { name: "default", count: 100 },
@@ -94,6 +106,9 @@ export function useHooks() {
   const [statusBankTableData, setStatusBankTableData] = useAtom(
     statusBankTableDataAtom
   );
+  const [entireBankTableData, setEntireBankTableDate] = useAtom(
+    entireBankTableDataAtom
+  );
   const [calenderDate, setCalenderDate] = useAtom(dateAtom);
   const [transactionHistoryTab, setTransactionHistoryTab] = useAtom(
     transactionHistoryTabAtom
@@ -122,6 +137,8 @@ export function useHooks() {
     setMyTableData,
     statusBankTableData,
     setStatusBankTableData,
+    entireBankTableData,
+    setEntireBankTableDate,
     calenderDate,
     setCalenderDate,
     transactionHistoryTab,
