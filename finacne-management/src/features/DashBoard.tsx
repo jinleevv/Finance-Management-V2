@@ -13,6 +13,8 @@ export function DashBoard() {
     setCurrentPage("/transaction-history");
     navigate("/transaction-history");
   }
+
+  
   return (
     <div className="w-full h-screen">
       <div className="w-full mt-12 pl-10 pr-10">

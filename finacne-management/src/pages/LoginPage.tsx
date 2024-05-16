@@ -2,7 +2,7 @@ import { BackgroundAnimation } from "@/features/BackgroundAnimation";
 import { LoginCard } from "@/features/LoginCard";
 import { useHooks } from "@/hooks";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginPage() {
@@ -15,10 +15,13 @@ export function LoginPage() {
     setUserEmail,
     setUserDepartment,
     setUserFullName,
+    setCurrentPage,
   } = useHooks();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    setCurrentPage(location.pathname);
     if (loggedInUser) {
       navigate("/home");
     }

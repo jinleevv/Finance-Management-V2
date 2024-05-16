@@ -1,14 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 import * as React from "react";
-import { ArrowLeftIcon, CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
@@ -131,23 +122,5 @@ export function DownloadTransaction() {
         </div>
       </div>
     </section>
-    // <Card className="w-[500px] sm:w-full xsm:w-full m-auto mt-24 sm:mt-0 xsm:mt-0">
-    //   <CardHeader>
-    //     <div className="flex justify-between">
-    //       <CardTitle>Download Transaction List</CardTitle>
-    //       <Button variant="outline" onClick={handleCancel} size="sm">
-    //         <ArrowLeftIcon />
-    //       </Button>
-    //     </div>
-    //     <CardDescription>Download the list in excel file</CardDescription>
-    //   </CardHeader>
-    //   <CardContent>
-
-    //     <CardFooter className="w-full mt-3 -ml-6 justify-end">
-
-    //     </CardFooter>
-    //     <Toaster />
-    //   </CardContent>
-    // </Card>
   );
 }

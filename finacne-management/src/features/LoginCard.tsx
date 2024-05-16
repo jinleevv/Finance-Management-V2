@@ -37,9 +37,14 @@ export function LoginCard() {
     clientII,
     userFirstName,
     userLastName,
-    setLoggedInUser,
     calenderDate,
+    setLoggedInUser,
     setStatusBankTableData,
+    setUserFirstName,
+    setUserLastName,
+    setUserFullName,
+    setUserEmail,
+    setUserDepartment,
   } = useHooks();
 
   // 1. Define your form.
@@ -57,22 +62,37 @@ export function LoginCard() {
           { withCredentials: true }
         )
         .then(() => {
-          setInvalidLogin(false);
-          setLoggedInUser(true);
+          clientII
+            .get("/api/user/")
+            .then((res) => {
+              const first_name = res.data.user.first_name;
+              const last_name = res.data.user.last_name;
+              setUserFirstName(first_name);
+              setUserLastName(last_name);
+              setUserFullName(first_name + " " + last_name);
+              setUserEmail(res.data.user.email);
+              setUserDepartment(res.data.user.department);
+              setLoggedInUser(true);
+
+              clientI
+                .post("/api/status-bank-transactions/", {
+                  date_from: calenderDate.from.toISOString().split("T")[0],
+                  date_to: calenderDate.to.toISOString().split("T")[0],
+                  first_name: userFirstName,
+                  last_name: userLastName,
+                })
+                .then((res) => {
+                  setStatusBankTableData(res.data.data);
+                  setInvalidLogin(false);
+                  navigate("/home");
+                });
+            })
+            .catch(() => {
+              setLoggedInUser(false);
+            });
         })
         .catch(() => {
           setInvalidLogin(true);
-        });
-      await clientI
-        .post("/api/status-bank-transactions/", {
-          date_from: calenderDate.from.toISOString().split("T")[0],
-          date_to: calenderDate.to.toISOString().split("T")[0],
-          first_name: userFirstName,
-          last_name: userLastName,
-        })
-        .then((res) => {
-          setStatusBankTableData(res.data.data);
-          navigate("/home");
         });
     } catch (error) {
       if (error.response.data["reason"] === "Non existing user") {
