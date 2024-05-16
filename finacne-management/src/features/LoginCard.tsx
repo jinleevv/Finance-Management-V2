@@ -57,7 +57,6 @@ export function LoginCard() {
           { withCredentials: true }
         )
         .then(() => {
-          navigate("/home");
           setInvalidLogin(false);
           setLoggedInUser(true);
         })
@@ -73,6 +72,7 @@ export function LoginCard() {
         })
         .then((res) => {
           setStatusBankTableData(res.data.data);
+          navigate("/home");
         });
     } catch (error) {
       if (error.response.data["reason"] === "Non existing user") {

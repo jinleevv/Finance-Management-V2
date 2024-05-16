@@ -216,7 +216,7 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[820px]">
+      <DialogContent className="block max-w-[820px] rounded-2xl">
         {status === "Matched" ? (
           <DialogHeader>
             <DialogTitle>It is already matched!</DialogTitle>
@@ -226,14 +226,14 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
           </DialogHeader>
         ) : (
           <>
-            <DialogHeader>
+            <DialogHeader className="w-full mr-10 mb-3 items-center">
               <DialogTitle>It is not matched yet!</DialogTitle>
               <DialogDescription>
                 Directly upload the information to match the transaction.
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
-              <form className="grid w-full">
+              <form className="w-full">
                 <div>
                   <Label htmlFor="image_file">Image File</Label>
                   <FormField
@@ -484,7 +484,7 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
                           <FormControl>
                             <Textarea
                               placeholder="Attendees"
-                              className="w-[386px] sm:w-full xsm:w-full"
+                              className="w-full"
                               {...field}
                             />
                           </FormControl>

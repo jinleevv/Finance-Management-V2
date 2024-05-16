@@ -15,16 +15,18 @@ export function DashBoard() {
   }
   return (
     <div className="w-full h-screen">
-      <div className="grid w-full mt-12 pl-10 pr-10">
-        <Label className="text-3xl">
-          Welcome, <span>{userFullName}</span>
-        </Label>
-        <Label className="mb-2">
-          Access & manage your account and transactions efficiently.
-        </Label>
+      <div className="w-full mt-12 pl-10 pr-10">
+        <div className="grid">
+          <Label className="text-3xl">
+            Welcome, <span>{userFullName}</span>
+          </Label>
+          <Label className="mb-2">
+            Access & manage your account and transactions efficiently.
+          </Label>
+        </div>
         <CardBalanceInformation />
       </div>
-      <div className="h-[450px] ml-10 mt-12 mr-10">
+      <div className="lg:h-[450px] h-[415px] ml-10 mt-12 mr-10">
         <div className="flex justify-between">
           <Label className="text-2xl">Recent transactions</Label>
           <Button variant="outline" onClick={handleViewAll}>

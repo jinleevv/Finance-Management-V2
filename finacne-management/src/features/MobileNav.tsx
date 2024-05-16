@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sheet";
 import { useHooks } from "@/hooks";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "@/features/Footer";
 
 export function MobileNav() {
   const { currentPage, setCurrentPage } = useHooks();
@@ -125,6 +126,9 @@ export function MobileNav() {
                     </Button>
                   </SheetClose>
                 )}
+              </div>
+              <div className="mt-72">
+                <Footer />
               </div>
             </nav>
           </SheetClose>

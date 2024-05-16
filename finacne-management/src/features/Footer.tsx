@@ -24,7 +24,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="flex border-t cursor-pointer items-center gap-2 p-7">
+    <footer className="flex border-t cursor-pointer items-center gap-2 lg:p-7 p-2">
       <div className="mr-1">
         <Avatar className="hover:shadow-lg">
           <AvatarFallback>
@@ -33,7 +33,7 @@ export function Footer() {
         </Avatar>
       </div>
 
-      <div className="flex gap-12">
+      <div className="flex lg:gap-12 gap-2">
         <div className="grid">
           <Label className="font-bold">
             {userFirstName} {userLastName},{" "}

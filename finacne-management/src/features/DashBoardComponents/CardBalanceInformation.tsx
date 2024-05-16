@@ -46,7 +46,7 @@ export function CardBalanceInformation() {
           />
         </div>
       </CardHeader>
-      <CardContent className="grid w-full mt-6">
+      <CardContent className="w-full mt-6 ">
         <div className="w-full">
           <CardTitle className="text-2xl">Current Balance</CardTitle>
           <CardDescription>
@@ -54,7 +54,7 @@ export function CardBalanceInformation() {
           </CardDescription>
         </div>
         <div className="flex w-full mt-5 space-x-5">
-          <Label className="text-md font-bold space-x-1">
+          <Label className="grid text-md font-bold space-x-1">
             <span>Current Balance:</span>
             <CountUp
               decimals={2}
@@ -64,7 +64,7 @@ export function CardBalanceInformation() {
               duration={1}
             />
           </Label>
-          <Label className="text-md font-bold space-x-1">
+          <Label className="grid text-md font-bold space-x-1">
             <span>Remaining Balance:</span>
             <CountUp
               decimals={2}
@@ -75,8 +75,10 @@ export function CardBalanceInformation() {
             />
           </Label>
         </div>
-        <div>
-          <Label className="text-md font-bold space-x-1">Status: Good</Label>
+        <div className="mt-2">
+          <Label className="grid text-md font-bold space-x-1">
+            Status: Good
+          </Label>
         </div>
       </CardContent>
     </Card>

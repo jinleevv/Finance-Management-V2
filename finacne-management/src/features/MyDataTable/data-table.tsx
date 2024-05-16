@@ -342,54 +342,55 @@ export function MyDataTable<TData1, TData2, TValue>({
             <Button onClick={handleFilterByDatesBankTab}>Search</Button>
           )}
         </div>
-        <TabsList className="custom-scrollbar mb-8 flex w-full flex-nowrap bg-white justify-between">
-          <div className="space-x-3">
-            <TabsTrigger
-              value="My_Transactions"
-              className="bg-white shadow-none border-0 p-0 justify-start items-start data-[state=active]:shadow-none"
-            >
-              <div
-                className={cn(`gap-[18px] border-b-2 flex transition-all`, {
-                  "border-black": myTabSelected,
-                })}
+        <div className="lg:flex">
+          <TabsList className="custom-scrollbar lg:mb-8 mb-3 flex w-full justify-start bg-white">
+            <div className="space-x-3">
+              <TabsTrigger
+                value="My_Transactions"
+                className="bg-white shadow-none border-0 p-0 items-start data-[state=active]:shadow-none"
               >
-                <p
-                  className={cn(
-                    `text-16 line-clamp-1 flex-1 font-medium text-black`,
-                    {
-                      "text-black": myTabSelected,
-                    }
-                  )}
+                <div
+                  className={cn(`gap-[18px] border-b-2 flex transition-all`, {
+                    "border-black": myTabSelected,
+                  })}
                 >
-                  My Upload History
-                </p>
-              </div>
-            </TabsTrigger>
-            <TabsTrigger
-              value="Bank_Transactions"
-              className="bg-white shadow-none border-0 p-0 justify-start items-start data-[state=active]:shadow-none"
-            >
-              <div
-                className={cn(`gap-[18px] border-b-2 flex transition-all`, {
-                  "border-black": bankTabSelected,
-                })}
+                  <p
+                    className={cn(
+                      `text-16 line-clamp-1 flex-1 font-medium text-black`,
+                      {
+                        "text-black": myTabSelected,
+                      }
+                    )}
+                  >
+                    My Upload History
+                  </p>
+                </div>
+              </TabsTrigger>
+              <TabsTrigger
+                value="Bank_Transactions"
+                className="bg-white shadow-none border-0 p-0 justify-start items-start data-[state=active]:shadow-none"
               >
-                <p
-                  className={cn(
-                    `text-16 line-clamp-1 flex-1 font-medium text-black`,
-                    {
-                      "text-black": bankTabSelected,
-                    }
-                  )}
+                <div
+                  className={cn(`gap-[18px] border-b-2 flex transition-all`, {
+                    "border-black": bankTabSelected,
+                  })}
                 >
-                  Official Bank Transactions
-                </p>
-              </div>
-            </TabsTrigger>
-          </div>
-
+                  <p
+                    className={cn(
+                      `text-16 line-clamp-1 flex-1 font-medium text-black`,
+                      {
+                        "text-black": bankTabSelected,
+                      }
+                    )}
+                  >
+                    Bank Transactions
+                  </p>
+                </div>
+              </TabsTrigger>
+            </div>
+          </TabsList>
           {myTabSelected ? (
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 lg:mb-0 mb-4">
               <Button variant="outline" onClick={handleDownloadImage}>
                 Download Images
               </Button>
@@ -437,7 +438,8 @@ export function MyDataTable<TData1, TData2, TValue>({
           ) : (
             <div></div>
           )}
-        </TabsList>
+        </div>
+
         <TabsContent value="My_Transactions">
           <Table>
             <TableHeader>

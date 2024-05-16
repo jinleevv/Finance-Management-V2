@@ -197,16 +197,16 @@ export function UploadTransactionsForm() {
     }
   }
   return (
-    <section className="w-full m-auto mt-0">
-      <div className="h-full mt-12 ml-10 mr-10">
+    <section className="w-full">
+      <div className="mt-12 ml-10 mr-10">
         <Label className="grid text-2xl font-bold">
           Corporate Card Transaction Upload Form
         </Label>
         <Label className="ml-1">Corporate Card Transaction Information</Label>
       </div>
-      <div className="h-full mt-12 ml-10 mr-10">
+      <div className="mt-12 ml-10 mr-10">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
             <div>
               <Label htmlFor="image_file">Image File</Label>
               <FormField
@@ -227,8 +227,8 @@ export function UploadTransactionsForm() {
                 )}
               />
             </div>
-            <div className="flex mt-7 gap-3">
-              <div className="w-full">
+            <div className="w-full flex mt-7 gap-3">
+              <div className="w-1/2">
                 <Label htmlFor="date">Date</Label>
                 <FormField
                   control={form.control}
@@ -268,7 +268,7 @@ export function UploadTransactionsForm() {
                   )}
                 />
               </div>
-              <div className="w-full">
+              <div className="w-1/2">
                 <Label htmlFor="category">Category</Label>
                 <FormField
                   control={form.control}
@@ -517,7 +517,7 @@ export function UploadTransactionsForm() {
                       <FormControl>
                         <Textarea
                           placeholder="Attendees"
-                          className="w-[386px] sm:w-full xsm:w-full"
+                          className="w-full"
                           {...field}
                         />
                       </FormControl>
