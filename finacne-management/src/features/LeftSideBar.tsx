@@ -199,7 +199,7 @@ export function LeftSideBar() {
                   </span>
                 </Button>
               )}
-              {currentPage === "/bank-transactions-history" ? (
+              {currentPage === "/bank-transaction-history" ? (
                 <Button
                   className="flex w-full h-12 text-left gap-2 overflow-auto"
                   onClick={handleBankTransactionHistoryNavigate}
