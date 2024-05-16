@@ -54,7 +54,7 @@ export function CardBalanceInformation() {
           </CardDescription>
         </div>
         <div className="flex w-full mt-5 space-x-5">
-          <Label className="grid text-md font-bold space-x-1">
+          <Label className="lg:flex grid text-md font-bold space-x-1">
             <span>Current Balance:</span>
             <CountUp
               decimals={2}
@@ -64,7 +64,7 @@ export function CardBalanceInformation() {
               duration={1}
             />
           </Label>
-          <Label className="grid text-md font-bold space-x-1">
+          <Label className="lg:flex grid text-md font-bold space-x-1">
             <span>Remaining Balance:</span>
             <CountUp
               decimals={2}
