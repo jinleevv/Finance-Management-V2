@@ -17,6 +17,7 @@ import { UploadBankTransactionsPage } from "@/pages/UploadBankTransactionsPage";
 import { DownloadTransactionsPage } from "@/pages/DownloadTransactionsPage";
 import { BankTransactionHistoryPage } from "@/pages/BankTransactionHistoryPage";
 import { CreateAccountPage } from "@/pages/CreateAccountPage";
+import { DepartmentCreditLimitPage } from "@/pages/DepartmentCreditLimitPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -155,6 +156,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateAccountPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/department-credit-limit"
+            element={
+              <ProtectedRoute>
+                <DepartmentCreditLimitPage />
               </ProtectedRoute>
             }
           ></Route>

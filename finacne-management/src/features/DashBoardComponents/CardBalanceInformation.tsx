@@ -11,6 +11,8 @@ import { DoughnutChart } from "@/features/DashBoardComponents/DoughnutChart";
 import { useEffect, useState } from "react";
 import { useHooks } from "@/hooks";
 import { StatusBadge } from "./StatusBadge";
+import { DateRange } from "react-day-picker";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 export function CardBalanceInformation() {
   const { clientI, userDepartment, balanceStatus, setBalanceStatus } =
@@ -29,6 +31,10 @@ export function CardBalanceInformation() {
 
   const [currentBalance, setCurrentBalance] = useState<number>(0);
   const [remainingBalance, setRemainingBalance] = useState<number>(10000);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date()),
+  });
   let departmentBalance: number = 0;
 
   function formatAmount(amount: number) {
@@ -42,13 +48,19 @@ export function CardBalanceInformation() {
   }
 
   useEffect(() => {
-    clientI.get("/api/department-credit-balance/").then((res) => {
-      const amount = remainingBalance - res.data[userDepartment];
-      if (res.data[userDepartment] !== currentBalance) {
-        setRemainingBalance(amount);
-        setCurrentBalance(res.data[userDepartment]);
-      }
-    });
+    clientI
+      .post("/api/department-credit-balance/", {
+        date_from: date.from.toISOString().split("T")[0],
+        date_to: date.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        const amount = remainingBalance - res.data[userDepartment];
+        if (res.data[userDepartment] !== currentBalance) {
+          setRemainingBalance(amount);
+          setCurrentBalance(res.data[userDepartment]);
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {

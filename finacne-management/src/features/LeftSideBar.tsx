@@ -4,7 +4,13 @@ import { useHooks } from "@/hooks";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Footer } from "@/features/Footer";
-import { LuBanknote, LuDownload, LuHistory, LuAxe } from "react-icons/lu";
+import {
+  LuBanknote,
+  LuDownload,
+  LuHistory,
+  LuAxe,
+  LuSettings2,
+} from "react-icons/lu";
 
 export function LeftSideBar() {
   const {
@@ -17,6 +23,7 @@ export function LeftSideBar() {
     setEntireBankTableDate,
     setMyTableData,
     setCurrentPage,
+    setDepartmentCreditCardInfo,
   } = useHooks();
   const navigate = useNavigate();
 
@@ -72,6 +79,14 @@ export function LeftSideBar() {
   function handleCreateAccountNavigate() {
     setCurrentPage("/create-account");
     navigate("/create-account");
+  }
+
+  async function handleSetDepartmentLimitNavigate() {
+    await clientI.get("/api/department-credit-card-limit").then((res) => {
+      setDepartmentCreditCardInfo(res.data);
+      setCurrentPage("/department-credit-limit");
+      navigate("/department-credit-limit");
+    });
   }
 
   return (
@@ -249,6 +264,28 @@ export function LeftSideBar() {
                   <LuAxe size={25} />
                   <span className="w-full font-semibold text-black-2 max-xl:hidden">
                     Create Account
+                  </span>
+                </Button>
+              )}
+              {currentPage === "/department-credit-limit" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleSetDepartmentLimitNavigate}
+                >
+                  <LuSettings2 size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Set Department Credit Limit
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleSetDepartmentLimitNavigate}
+                >
+                  <LuSettings2 size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Set Department Credit Limit
                   </span>
                 </Button>
               )}
