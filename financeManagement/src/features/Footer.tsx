@@ -42,7 +42,7 @@ export function Footer() {
           <Label className="text-xs">{userEmail}</Label>
         </div>
         <div className="flex justify-end" onClick={handleLogout}>
-          <img src="src/icons/logout.svg" alt="logout" />
+          <img src="/icons/logout.svg" alt="logout" />
         </div>
       </div>
     </footer>

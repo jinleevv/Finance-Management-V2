@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Sky } from "@react-three/drei";
-import * as random from "maath/random/dist/maath-random.cjs";
+import * as random from "maath/random";
 import { useRef, useState } from "react";
 // import { useTheme } from "@/components/theme-provider";
 

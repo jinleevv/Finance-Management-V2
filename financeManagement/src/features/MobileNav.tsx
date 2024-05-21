@@ -34,7 +34,7 @@ export function MobileNav() {
       <Sheet>
         <SheetTrigger>
           <img
-            src="/src/icons/hamburger.svg"
+            src="/icons/hamburger.svg"
             width={30}
             height={30}
             alt="menu"
@@ -54,7 +54,7 @@ export function MobileNav() {
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
                       onClick={handleHomeNavigate}
                     >
-                      <img src="/src/icons/home.svg" />
+                      <img src="/icons/home.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Home
                       </span>
@@ -67,7 +67,7 @@ export function MobileNav() {
                       variant="ghost"
                       onClick={handleHomeNavigate}
                     >
-                      <img src="/src/icons/home.svg" />
+                      <img src="/icons/home.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Home
                       </span>
@@ -80,7 +80,7 @@ export function MobileNav() {
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
                       onClick={handleHistoryNavigate}
                     >
-                      <img src="/src/icons/transaction.svg" />
+                      <img src="/icons/transaction.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Transaction History
                       </span>
@@ -93,7 +93,7 @@ export function MobileNav() {
                       variant="ghost"
                       onClick={handleHistoryNavigate}
                     >
-                      <img src="/src/icons/transaction.svg" />
+                      <img src="/icons/transaction.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Transaction History
                       </span>
@@ -106,7 +106,7 @@ export function MobileNav() {
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
                       onClick={handleUploadNavigate}
                     >
-                      <img src="/src/icons/dollar-circle.svg" />
+                      <img src="/icons/dollar-circle.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Upload Transactions
                       </span>
@@ -119,7 +119,7 @@ export function MobileNav() {
                       variant="ghost"
                       onClick={handleUploadNavigate}
                     >
-                      <img src="/src/icons/dollar-circle.svg" />
+                      <img src="/icons/dollar-circle.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Upload Transactions
                       </span>

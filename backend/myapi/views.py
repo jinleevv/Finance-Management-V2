@@ -6,13 +6,15 @@ from rest_framework.views import APIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ChangePasswordSerializer
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
-from .models import TaxTransactionForm, BankTransactionList
+from .models import TaxTransactionForm, BankTransactionList, DepartmentCreditLimit
 from datetime import datetime
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.conf import settings
 import os
 import shutil
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.db.models import Count, Sum
+import re
 
 class SessionStatus(APIView):
     permission_classes = ()
@@ -120,18 +122,22 @@ class CardTransactionUpload(APIView):
 class CardTransactionHistory(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
-    def get(self, request):
-        serializer = UserSerializer(request.user)
+    def post(self, request):
+        try:
+            data = request.data
 
-        first_name = serializer.data['first_name']
-        last_name = serializer.data['last_name']
+            date_from = data.get('date_from')
+            date_to = data.get('date_to')
 
-        today = datetime.now().date()
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
 
-        my_data = TaxTransactionForm.objects.filter(trans_date__range=(today.replace(day=1), today), first_name=first_name.upper(), last_name=last_name.upper())
-        data_list = list(my_data.values())
-        
-        return JsonResponse(data_list, safe=False)
+            my_data = TaxTransactionForm.objects.filter(trans_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper()).order_by('-trans_date')
+            data_list = list(my_data.values())
+            
+            return JsonResponse(data_list, safe=False)
+        except Exception as e:
+            print(e)
 
 class EntireCardTransactionHistory(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -165,11 +171,14 @@ class DownloadTransactions(APIView):
         try:
             return_data = []
             bank_lists = BankTransactionList.objects.filter(post_date__range=(date_from, date_to))
-
+            transaction_lists = list(TaxTransactionForm.objects.values_list('trans_date', 'billing_amount', 'tps', 'tvq', 'merchant_name', 'category', 'purpose', 'first_name', 'last_name', 'project', 'attendees', 'department'))
             for item in bank_lists:
                 try:
                     match_item = TaxTransactionForm.objects.get(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())
-                
+                    match_item_tuple = tuple(getattr(match_item, field.name) for field in match_item._meta.fields)
+                    match_item_tuple = match_item_tuple[1:]
+                    transaction_lists.remove(match_item_tuple[:7] + match_item_tuple[8:])
+
                 except ObjectDoesNotExist:
                     item_dict = {
                     'Trans Date': item.trans_date,
@@ -194,7 +203,62 @@ class DownloadTransactions(APIView):
                 
                 except MultipleObjectsReturned:
                     match_items = TaxTransactionForm.objects.filter(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())    
-                    match_item = match_items[0]
+                    match_item = 0
+                    try:
+                        for i in match_items:
+                            match_item_tuple = tuple(getattr(i, field.name) for field in i._meta.fields)
+                            match_item_tuple = match_item_tuple[1:]
+                            try:
+                                transaction_lists.remove(match_item_tuple[:7] + match_item_tuple[8:])
+                                match_item = i
+                                break
+                            except ValueError:
+                                continue
+                        if match_item == 0:
+                            item_dict = {
+                            'Trans Date': item.trans_date,
+                            'Post Date': item.post_date,
+                            'Merchant Name': item.merchant_name,
+                            'Billing Amount': item.billing_amount,
+                            'TPS(GST)': "",
+                            'TVQ(QST)': "",
+                            'Taxable Amount': "",
+                            'Purpose': "",
+                            'Category': "",
+                            'Account': "",
+                            'Project': "",
+                            'Attendees:': "",
+                            'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                            'Matched': False,
+                            }
+                            return_data.append(item_dict)
+
+                            continue
+
+                    except ValueError:
+                        continue
+                
+                except ValueError:
+                    item_dict = {
+                    'Trans Date': item.trans_date,
+                    'Post Date': item.post_date,
+                    'Merchant Name': item.merchant_name,
+                    'Billing Amount': item.billing_amount,
+                    'TPS(GST)': "",
+                    'TVQ(QST)': "",
+                    'Taxable Amount': "",
+                    'Purpose': "",
+                    'Category': "",
+                    'Account': "",
+                    'Project': "",
+                    'Attendees:': "",
+                    'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                    'Matched': False,
+                    }
+                
+                    return_data.append(item_dict)
+
+                    continue
 
                 department = ""
                 full_name = item.first_name.upper() + item.last_name.upper()
@@ -246,7 +310,7 @@ class DownloadTransactions(APIView):
                     'Project': match_item.project,
                     'Attendees:': match_item.attendees,
                     'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
-                    'Matched:': True,
+                    'Matched': True,
                 }
                 
                 return_data.append(item_dict)
@@ -582,4 +646,144 @@ class EditTransactionInformation(APIView):
         except Exception as e:
             print(e)
             return Response({'message': f'{e}'}, status=status.HTTP_204_NO_CONTENT)
+
+class StatusBankTransactions(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+
+    def post(self, request):
+        try:
+            data = request.data
+            date_from = data.get('date_from')
+            date_to = data.get('date_to')
+
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+
+            return_data = []
+            bank_lists = BankTransactionList.objects.filter(post_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper()).order_by('-post_date')
+
+            for item in bank_lists:
+                try:
+                    match_item = TaxTransactionForm.objects.get(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())
+                
+                except ObjectDoesNotExist:
+                    item_dict = {
+                    'status': 'Unmatched',
+                    'trans_date': item.trans_date,
+                    'post_date': item.post_date,
+                    'merchant_name': item.merchant_name,
+                    'billing_amount': item.billing_amount,
+                    'full_name': item.first_name.upper() + " " + item.last_name.upper(),
+                    }
+                
+                    return_data.append(item_dict)
+
+                    continue
+                
+                except MultipleObjectsReturned:
+                    match_items = TaxTransactionForm.objects.filter(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())    
+                    match_item = match_items[0]
+
+                item_dict = {
+                    'status': 'Matched',
+                    'trans_date': item.trans_date,
+                    'post_date': item.post_date,
+                    'merchant_name': item.merchant_name,
+                    'billing_amount': item.billing_amount,
+                    'full_name': item.first_name.upper() + " " + item.last_name.upper(),
+                    }
+                
+                return_data.append(item_dict)
+
+            return Response({'data': return_data}, status=status.HTTP_200_OK)
         
+        except Exception as e:
+            print(e)
+            return Response({'message': f'{e}'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class TopCategoriesCount(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+
+        first_name = serializer.data['first_name']
+        last_name = serializer.data['last_name']
+
+        transactions = TaxTransactionForm.objects.filter(first_name=first_name.upper(), last_name=last_name.upper())
+        top_categories = (
+            transactions.values('category')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:3]
+        )
+
+        return_value = {}
+        for index, entry in enumerate(top_categories):
+            return_value[index] = {"category": entry['category'], 'count': entry['count']}
+
+        return_value['total'] = TaxTransactionForm.objects.count()
+
+        return JsonResponse(return_value, safe=False)
+
+class DepartmentCreditCardBalance(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+    def post(self, request):
+        data = request.data
+        date_from = data.get('date_from')
+        date_to = data.get('date_to')
+
+        total_billing_amounts = TaxTransactionForm.objects.filter(trans_date__range=(date_from, date_to)).values('department').annotate(total_billing_amount=Sum('billing_amount'))
+        
+        return_value = {}
+        for entry in total_billing_amounts:
+            return_value[entry['department']] = entry['total_billing_amount']
+            update_department = DepartmentCreditLimit.objects.get(department=entry['department'])
+            update_department.usage = entry['total_billing_amount']
+            update_department.save()
+
+        return JsonResponse(return_value, safe=False)
+
+class DepartmentCreditCardLimit(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+    def get(self, request):
+        department_limits = DepartmentCreditLimit.objects.all()
+        
+        # Serialize the data into a list of dictionaries
+        return_value = [
+            {
+                'department': department_limit.department,
+                'limit': department_limit.limit,
+                'usage': department_limit.usage
+            }
+            for department_limit in department_limits
+        ]
+
+        # Return the serialized data as JSON
+        return JsonResponse(return_value, safe=False)
+
+    def post(self, request):
+        data = request.data
+        pattern = re.compile(r'^-?\d+(\.\d+)?$')
+
+        new_limit = data.get('limit')
+        department_name = data.get('department')
+
+        try:
+            if (bool(pattern.match(new_limit))):
+                department_limit = DepartmentCreditLimit.objects.get(department=department_name)
+            else:
+                print('limit error')
+                return Response({'error': 'Limit is not a number'}, status=status.HTTP_404_NOT_FOUND)
+        except DepartmentCreditLimit.DoesNotExist:
+            if (bool(pattern.match(new_limit))):
+                DepartmentCreditLimit.objects.create(department=department_name, limit=float(new_limit))
+                return Response({'message': 'Department limit updated successfully'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Department not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        department_limit.limit = float(new_limit)
+        department_limit.save()
+        return Response({'message': 'Department limit updated successfully'}, status=status.HTTP_200_OK)

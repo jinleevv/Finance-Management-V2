@@ -22,9 +22,9 @@ export function BankCard() {
           </article>
         </div>
         <div className="flex flex-1 flex-col items-end justify-between rounded-r-[20px] bg-bank-gradient bg-cover bg-center bg-no-repeat pr-7 py-5">
-          <img src="/src/icons/Paypass.svg" width={20} height={24} alt="pay" />
+          <img src="/icons/Paypass.svg" width={20} height={24} alt="pay" />
           <img
-            src="/src/icons/mastercard.svg"
+            src="/icons/mastercard.svg"
             width={30}
             height={32}
             alt="mastercard"
@@ -32,7 +32,7 @@ export function BankCard() {
           />
         </div>
         <img
-          src="/src/icons/lines.png"
+          src="/icons/lines.png"
           width={316}
           height={190}
           alt="lines"

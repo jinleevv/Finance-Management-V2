@@ -116,7 +116,23 @@ class BankTransactionList(models.Model):
     class Meta:
         verbose_name = 'Transaction'
         verbose_name_plural = 'Bank Lists'
+
+class DepartmentCreditLimitManager(models.Manager):
+    def create_department(self, department, limit):
+        new_department = self.create(department=department, limit=limit)
+        return new_department
     
+class DepartmentCreditLimit(models.Model):
+    department = models.CharField(max_length=100)
+    limit = models.FloatField()
+    usage = models.FloatField(default=0)
+
+    objects = DepartmentCreditLimitManager()
+
+    @classmethod
+    def create(cls, department, limit):
+        new_department = cls(department=department, limit=limit)
+        return new_department
 
 
     

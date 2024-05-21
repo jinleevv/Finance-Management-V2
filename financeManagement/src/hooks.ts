@@ -83,7 +83,7 @@ const topCategoriesAtom = atomWithImmer<TopCategoriesType>({
   third: { name: "default", count: 70 },
 });
 const balanceStatusAtom = atomWithImmer<string>("");
-const departmentCreditCardInfoAtom = atomWithImmer<Array<any>>([])
+const departmentCreditCardInfoAtom = atomWithImmer<Array<any>>([]);
 
 export function useHooks() {
   const clientI = axios.create({
@@ -117,7 +117,9 @@ export function useHooks() {
   );
   const [topCategories, setTopCatetories] = useAtom(topCategoriesAtom);
   const [balanceStatus, setBalanceStatus] = useAtom(balanceStatusAtom);
-  const [departmentCreditCardInfo, setDepartmentCreditCardInfo] = useAtom(departmentCreditCardInfoAtom);
+  const [departmentCreditCardInfo, setDepartmentCreditCardInfo] = useAtom(
+    departmentCreditCardInfoAtom
+  );
 
   return {
     clientI,

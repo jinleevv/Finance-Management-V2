@@ -104,7 +104,7 @@ export function LeftSideBar() {
               className="flex w-full h-12 text-left gap-2 overflow-auto"
               onClick={handleHomeNavigate}
             >
-              <img src="/src/icons/home.svg" />
+              <img src="/icons/home.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Home
               </span>
@@ -115,7 +115,7 @@ export function LeftSideBar() {
               variant="ghost"
               onClick={handleHomeNavigate}
             >
-              <img src="/src/icons/home.svg" />
+              <img src="/icons/home.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Home
               </span>
@@ -126,7 +126,7 @@ export function LeftSideBar() {
               className="flex w-full h-12 text-left gap-2 overflow-auto"
               onClick={handleHistoryNavigate}
             >
-              <img src="/src/icons/transaction.svg" />
+              <img src="/icons/transaction.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Transaction History
               </span>
@@ -137,7 +137,7 @@ export function LeftSideBar() {
               variant="ghost"
               onClick={handleHistoryNavigate}
             >
-              <img src="/src/icons/transaction.svg" />
+              <img src="/icons/transaction.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Transaction History
               </span>
@@ -148,7 +148,7 @@ export function LeftSideBar() {
               className="flex w-full h-12 text-left gap-2 overflow-auto"
               onClick={handleUploadNavigate}
             >
-              <img src="/src/icons/dollar-circle.svg" />
+              <img src="/icons/dollar-circle.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Upload Transactions
               </span>
@@ -159,7 +159,7 @@ export function LeftSideBar() {
               variant="ghost"
               onClick={handleUploadNavigate}
             >
-              <img src="/src/icons/dollar-circle.svg" />
+              <img src="/icons/dollar-circle.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Upload Transactions
               </span>

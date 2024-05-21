@@ -18,24 +18,12 @@ export function CardBalanceInformation() {
   const { clientI, userDepartment, balanceStatus, setBalanceStatus } =
     useHooks();
 
-  const DepartmentBalance = {
-    president: 10000,
-    finance: 10000,
-    hr_general_affairs: 10000,
-    marketing: 10000,
-    IT_security: 10000,
-    procurement: 10000,
-    contruction_operation: 10000,
-    Admin: 10000,
-  };
-
   const [currentBalance, setCurrentBalance] = useState<number>(0);
-  const [remainingBalance, setRemainingBalance] = useState<number>(10000);
+  const [remainingBalance, setRemainingBalance] = useState<number>(0);
   const [date, setDate] = useState<DateRange | undefined>({
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
   });
-  let departmentBalance: number = 0;
 
   function formatAmount(amount: number) {
     const formatter = new Intl.NumberFormat("en-US", {
@@ -53,40 +41,23 @@ export function CardBalanceInformation() {
         date_from: date.from.toISOString().split("T")[0],
         date_to: date.to.toISOString().split("T")[0],
       })
-      .then((res) => {
-        const amount = remainingBalance - res.data[userDepartment];
-        if (res.data[userDepartment] !== currentBalance) {
-          setRemainingBalance(amount);
-          setCurrentBalance(res.data[userDepartment]);
-        }
+      .then(() => {
+        clientI.get("/api/department-credit-card-limit/").then((res) => {
+          res.data.map((item) => {
+            if (item.department === userDepartment) {
+              setCurrentBalance(item.usage);
+              setRemainingBalance(item.limit - item.usage);
+              if (currentBalance >= item.limit - item.usage) {
+                setBalanceStatus("Bad");
+              } else {
+                setBalanceStatus("Good");
+              }
+            }
+          });
+        });
       })
       .catch((err) => console.log(err));
   }, []);
-
-  useEffect(() => {
-    if (userDepartment === "President") {
-      departmentBalance = DepartmentBalance.president;
-    } else if (userDepartment === "Procurement") {
-      departmentBalance = DepartmentBalance.procurement;
-    } else if (userDepartment === "Contruction Operation") {
-      departmentBalance = DepartmentBalance.contruction_operation;
-    } else if (userDepartment === "IT Security") {
-      departmentBalance = DepartmentBalance.IT_security;
-    } else if (userDepartment === "Finance") {
-      departmentBalance = DepartmentBalance.finance;
-    } else if (userDepartment === "HR General Affairs") {
-      departmentBalance = DepartmentBalance.hr_general_affairs;
-    } else if (userDepartment === "Marketing") {
-      departmentBalance = DepartmentBalance.marketing;
-    }
-
-    if (currentBalance >= departmentBalance * 0.5) {
-      setBalanceStatus("Bad");
-    } else {
-      console.log(currentBalance);
-      setBalanceStatus("Good");
-    }
-  }, [currentBalance]);
 
   return (
     <Card className="lg:flex mt-2 w-full shadow-lg">
