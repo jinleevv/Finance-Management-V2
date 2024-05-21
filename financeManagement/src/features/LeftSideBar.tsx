@@ -15,6 +15,7 @@ import {
 export function LeftSideBar() {
   const {
     clientI,
+    clientII,
     calenderDate,
     currentPage,
     userFirstName,
@@ -24,6 +25,8 @@ export function LeftSideBar() {
     setMyTableData,
     setCurrentPage,
     setDepartmentCreditCardInfo,
+    setMyMissingBankData,
+    setMyMissingUploadedData,
   } = useHooks();
   const navigate = useNavigate();
 
@@ -87,6 +90,24 @@ export function LeftSideBar() {
       setCurrentPage("/department-credit-limit");
       navigate("/department-credit-limit");
     });
+  }
+
+  async function handleMissingTransactionsNavigate() {
+    await clientII.get("/api/missing-transaction-lists/").then((res) => {
+      setMyMissingUploadedData(res.data);
+    });
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        setMyMissingBankData(res.data.data);
+      });
+    setCurrentPage("/missing-transactions");
+    navigate("/missing-transactions");
   }
 
   return (
@@ -162,6 +183,28 @@ export function LeftSideBar() {
               <img src="/icons/dollar-circle.svg" />
               <span className="w-full font-semibold text-black-2 max-xl:hidden">
                 Upload Transactions
+              </span>
+            </Button>
+          )}
+          {currentPage === "/missing-transactions" ? (
+            <Button
+              className="flex w-full h-12 text-left gap-2 overflow-auto"
+              onClick={handleMissingTransactionsNavigate}
+            >
+              <img src="/icons/transaction.svg" />
+              <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                Missing Transactions
+              </span>
+            </Button>
+          ) : (
+            <Button
+              className="flex w-full h-12 text-left gap-2 overflow-auto"
+              variant="ghost"
+              onClick={handleMissingTransactionsNavigate}
+            >
+              <img src="/icons/transaction.svg" />
+              <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                Missing Transactions
               </span>
             </Button>
           )}

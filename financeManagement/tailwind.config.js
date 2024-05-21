@@ -67,7 +67,7 @@ module.exports = {
       },
       backgroundImage: {
         "bank-gradient": "linear-gradient(90deg, #000000 0%, #A9A9A9 100%)",
-        "gradient-mesh": "url('/src/icons/blacknwhite.png')",
+        "gradient-mesh": "url('/icons/blacknwhite.png')",
         "bank-green-gradient":
           "linear-gradient(90deg, #01797A 0%, #489399 100%)",
       },

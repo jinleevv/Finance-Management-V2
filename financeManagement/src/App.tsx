@@ -18,6 +18,7 @@ import { DownloadTransactionsPage } from "@/pages/DownloadTransactionsPage";
 import { BankTransactionHistoryPage } from "@/pages/BankTransactionHistoryPage";
 import { CreateAccountPage } from "@/pages/CreateAccountPage";
 import { DepartmentCreditLimitPage } from "@/pages/DepartmentCreditLimitPage";
+import { MissingTransactionsPage } from "@/pages/MissingTransactionsPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -124,6 +125,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <UploadTransactions />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/missing-transactions"
+            element={
+              <ProtectedRoute>
+                <MissingTransactionsPage />
               </ProtectedRoute>
             }
           ></Route>

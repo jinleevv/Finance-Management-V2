@@ -70,6 +70,10 @@ const fullNameAtom = atomWithImmer<string>("");
 const userEmailAtom = atomWithImmer<string>("");
 const userDepartmentAtom = atomWithImmer<string>("");
 const myTableDataAtom = atomWithImmer<Array<MyTransactionsData>>([]);
+const myMissingUploadedDataAtom = atomWithImmer<Array<MyTransactionsData>>([]);
+const mymissingBankDataAtom = atomWithImmer<Array<StatusBankTransactionsData>>(
+  []
+);
 const statusBankTableDataAtom = atomWithImmer<
   Array<StatusBankTransactionsData>
 >([]);
@@ -105,6 +109,12 @@ export function useHooks() {
   const [userEmail, setUserEmail] = useAtom(userEmailAtom);
   const [userDepartment, setUserDepartment] = useAtom(userDepartmentAtom);
   const [myTableData, setMyTableData] = useAtom(myTableDataAtom);
+  const [myMissingUploadedData, setMyMissingUploadedData] = useAtom(
+    myMissingUploadedDataAtom
+  );
+  const [myMissingBankData, setMyMissingBankData] = useAtom(
+    mymissingBankDataAtom
+  );
   const [statusBankTableData, setStatusBankTableData] = useAtom(
     statusBankTableDataAtom
   );
@@ -141,6 +151,10 @@ export function useHooks() {
     setUserDepartment,
     myTableData,
     setMyTableData,
+    myMissingUploadedData,
+    setMyMissingUploadedData,
+    myMissingBankData,
+    setMyMissingBankData,
     statusBankTableData,
     setStatusBankTableData,
     entireBankTableData,
