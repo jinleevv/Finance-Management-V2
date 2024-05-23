@@ -12,6 +12,7 @@ export function Footer() {
     userDepartment,
     userEmail,
     setLoggedInUser,
+    setCurrentPage,
   } = useHooks();
   const navigate = useNavigate();
 
@@ -23,17 +24,22 @@ export function Footer() {
     });
   }
 
+  function handleProfile() {
+    setCurrentPage("/profile");
+    navigate("/profile");
+  }
+
   return (
-    <footer className="flex border-t cursor-pointer items-center gap-2 lg:p-7 p-2">
-      <div className="mr-1">
+    <footer className="flex border-t cursor-pointer items-center lg:p-7 p-2">
+      <div className="mr-1 -ml-2">
         <Avatar className="hover:shadow-lg">
           <AvatarFallback>
-            <PersonIcon />
+            <PersonIcon onClick={handleProfile} />
           </AvatarFallback>
         </Avatar>
       </div>
 
-      <div className="flex lg:gap-12 gap-2">
+      <div className="flex">
         <div className="grid">
           <Label className="font-bold">
             {userFirstName} {userLastName},{" "}
@@ -41,8 +47,8 @@ export function Footer() {
           </Label>
           <Label className="text-xs">{userEmail}</Label>
         </div>
-        <div className="flex justify-end" onClick={handleLogout}>
-          <img src="/icons/logout.svg" alt="logout" />
+        <div className="flex ml-10 justify-end" onClick={handleLogout}>
+          <img src="/icons/logout.svg" alt="logout" width={20} height={20} />
         </div>
       </div>
     </footer>

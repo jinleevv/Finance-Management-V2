@@ -172,7 +172,7 @@ export function MobileNav() {
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
                       onClick={handleMissingTransactionsNavigate}
                     >
-                      <img src="/icons/dollar-circle.svg" />
+                      <img src="/icons/transaction.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Missing Transactions
                       </span>
@@ -185,7 +185,7 @@ export function MobileNav() {
                       variant="ghost"
                       onClick={handleMissingTransactionsNavigate}
                     >
-                      <img src="/icons/dollar-circle.svg" />
+                      <img src="/icons/transaction.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Missing Transactions
                       </span>
