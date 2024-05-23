@@ -25,7 +25,6 @@ export function RightSideBar() {
         },
       });
     });
-    console.log(topCategories);
   }
 
   return (

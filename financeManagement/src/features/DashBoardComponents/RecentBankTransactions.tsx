@@ -6,7 +6,7 @@ export function RecentBankTransactions() {
   const { statusBankTableData } = useHooks();
 
   return (
-    <section className="flex w-full h-full flex-col gap-6 overflow-hidden">
+    <section className="flex w-full h-full flex-col gap-6 overflow-auto">
       <BankDataTable columns={StatusBankColumns} data={statusBankTableData} />
     </section>
   );

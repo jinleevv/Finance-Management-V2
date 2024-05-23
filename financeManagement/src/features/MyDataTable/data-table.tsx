@@ -287,7 +287,6 @@ export function MyDataTable<TData1, TData2, TValue>({
         const blob = new Blob([response.data], { type: "application/zip" });
         saveAs(blob, `images_${todayDateString}.zip`);
       } catch (error) {
-        console.log(error);
         toast("Error downloading images");
       }
     }
@@ -299,14 +298,14 @@ export function MyDataTable<TData1, TData2, TValue>({
         defaultValue={transactionHistoryTab}
         onValueChange={handleTabChange}
       >
-        <div className="flex gap-1 mt-8 mb-4 justify-end">
+        <div className="flex w-full gap-1 mt-8 mb-4 justify-end">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 id="date"
                 variant={"outline"}
                 className={cn(
-                  "w-[300px] justify-start text-left font-normal",
+                  "w-[250px] justify-start text-left font-normal",
                   !date && "text-muted-foreground"
                 )}
               >

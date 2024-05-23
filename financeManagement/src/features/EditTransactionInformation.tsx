@@ -64,7 +64,15 @@ const formSchema = z.object({
 export function EditTransactionInformation({
   data,
 }: EditTransactionInformationProps) {
-  const { clientI, setMyTableData } = useHooks();
+  const {
+    clientI,
+    calenderDate,
+    userFirstName,
+    userLastName,
+    setMyMissingUploadedData,
+    setMyTableData,
+    setMyMissingBankData,
+  } = useHooks();
   const [checked, setChecked] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -131,6 +139,33 @@ export function EditTransactionInformation({
       .catch(() => {
         toast("Failed to edit the selected item");
       });
+    await clientI
+      .post("/api/missing-transaction-lists/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        setMyMissingUploadedData(res.data);
+      });
+
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        let response_data = new Array();
+        res.data.data.map((item) => {
+          if (item.status === "Unmatched") {
+            response_data.push(item);
+          }
+        });
+        setMyMissingBankData(response_data);
+      });
   }
 
   return (
@@ -151,307 +186,302 @@ export function EditTransactionInformation({
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-col space-y-3">
-                    <div className="flex gap-20 sm:gap-3 xsm:gap-3">
-                      <div className="grid space-y-3">
-                        <Label htmlFor="date">Date</Label>
-                        <FormField
-                          control={form.control}
-                          name="date"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <Popover {...field}>
-                                  <PopoverTrigger asChild>
-                                    <Button
-                                      variant={"outline"}
-                                      className={cn(
-                                        "w-[280px] sm:w-[180px] xsm:w-[150px] justify-start text-left font-normal",
-                                        !field.value && "text-muted-foreground"
-                                      )}
-                                    >
-                                      <CalendarIcon className="mr-2 h-4 w-4" />
-                                      {field.value ? (
-                                        format(field.value, "PPP")
-                                      ) : (
-                                        <span>Pick a date</span>
-                                      )}
-                                    </Button>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={field.onChange}
-                                      initialFocus
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                              </FormControl>
-                            </FormItem>
-                          )}
+                <div className="flex w-full gap-3">
+                  <div className="w-1/2">
+                    <Label htmlFor="date">Date</Label>
+                    <FormField
+                      control={form.control}
+                      name="date"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <Popover {...field}>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-full justify-start text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <Label htmlFor="category">Category</Label>
+                    <FormField
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                asChild
+                                className="w-full h-full overflow-hidden"
+                              >
+                                <Button variant="outline">
+                                  {field.value ? (
+                                    field.value
+                                  ) : (
+                                    <span>Choose a category</span>
+                                  )}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-full h-full break-all">
+                                <DropdownMenuLabel>
+                                  Choose a category
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                >
+                                  <DropdownMenuRadioItem value="Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)">
+                                    Business Trip
+                                    (Hotel,Food,Gas,Parking,Toll,Trasportation)
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Meeting with Business Partners">
+                                    Meeting with Business Partners
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Meeting between employees">
+                                    Meeting between employees
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Business Conference, Seminar, Workshop">
+                                    Business Conference, Seminar, Workshop
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Banking Fees">
+                                    Banking Fees
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Car Expenses (Gas, Maintenance, Parking, Toll)">
+                                    Car Expenses (Gas, Maintenance, Parking,
+                                    Toll)
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Others(Ask Finance Department)">
+                                    Others (Ask Finance Department)
+                                  </DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="flex w-full gap-3 mt-7">
+                  <div className="w-1/2">
+                    <div className="flex gap-3">
+                      <Label htmlFor="amount">Billing Amount</Label>
+                      <div className="space-x-1 -mt-1">
+                        <Checkbox
+                          id="terms"
+                          checked={checked}
+                          onCheckedChange={handleCheckBox}
                         />
-                      </div>
-                      <div className="w-full grid space-y-3">
-                        <Label htmlFor="category">Category</Label>
-                        <FormField
-                          control={form.control}
-                          name="category"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger
-                                    asChild
-                                    className="w-full h-full sm:w-[142px] xsm:w-[142px] overflow-hidden"
-                                  >
-                                    <Button variant="outline">
-                                      {field.value ? (
-                                        field.value
-                                      ) : (
-                                        <span>Choose a category</span>
-                                      )}
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="w-full h-full break-all">
-                                    <DropdownMenuLabel>
-                                      Choose a category
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuRadioGroup
-                                      value={field.value}
-                                      onValueChange={field.onChange}
-                                    >
-                                      <DropdownMenuRadioItem value="Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)">
-                                        Business Trip
-                                        (Hotel,Food,Gas,Parking,Toll,Trasportation)
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Meeting with Business Partners">
-                                        Meeting with Business Partners
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Meeting between employees">
-                                        Meeting between employees
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Business Conference, Seminar, Workshop">
-                                        Business Conference, Seminar, Workshop
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Banking Fees">
-                                        Banking Fees
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Car Expenses (Gas, Maintenance, Parking, Toll)">
-                                        Car Expenses (Gas, Maintenance, Parking,
-                                        Toll)
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="Others(Ask Finance Department)">
-                                        Others (Ask Finance Department)
-                                      </DropdownMenuRadioItem>
-                                    </DropdownMenuRadioGroup>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Auto tax
+                        </label>
                       </div>
                     </div>
-                    <div className="flex gap-20 sm:gap-3 xsm:gap-3">
-                      <div className="grid space-y-3">
-                        <div className="flex justify-between">
-                          <Label htmlFor="amount">Billing Amount</Label>
-                          <div className="flex items-center space-x-1">
-                            <Checkbox
-                              id="terms"
-                              checked={checked}
-                              onCheckedChange={handleCheckBox}
+                    <FormField
+                      control={form.control}
+                      name="billing_amount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <Input
+                              id="amount"
+                              placeholder="Amount"
+                              className="w-full"
+                              {...field}
                             />
-                            <label
-                              htmlFor="terms"
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Auto tax
-                            </label>
-                          </div>
-                        </div>
-                        <FormField
-                          control={form.control}
-                          name="billing_amount"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <Input
-                                  id="amount"
-                                  placeholder="Amount"
-                                  className="w-[280px] sm:w-[180px] xsm:w-[150px]"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="flex gap-3">
-                        <div className="flex w-full gap-3 sm:gap-1 xsm:gap-1">
-                          <div className="grid space-y-3">
-                            <Label htmlFor="amount">TPS(GST)</Label>
-                            <FormField
-                              control={form.control}
-                              name="tps"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                                  <FormControl>
-                                    <Input
-                                      id="amount"
-                                      placeholder="Amount"
-                                      className="w-[190px] sm:w-full xsm:w-full"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex w-1/2 -mt-1 gap-3">
+                    <div className="w-1/2">
+                      <Label htmlFor="amount">TPS(GST)</Label>
+                      <FormField
+                        control={form.control}
+                        name="tps"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                            <FormControl>
+                              <Input
+                                id="amount"
+                                placeholder="Amount"
+                                className="w-full"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <Label htmlFor="amount">TVQ(QST)</Label>
+                      <FormField
+                        control={form.control}
+                        name="tvq"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                            <FormControl>
+                              <Input
+                                id="amount"
+                                placeholder="Amount"
+                                className="w-[210px] sm:w-full xsm:w-full"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex w-full gap-3 mt-5">
+                  <div className="w-1/2">
+                    <Label htmlFor="merchant_name">Merchant Name</Label>
+                    <FormField
+                      control={form.control}
+                      name="merchant_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <Input
+                              id="merchant_name"
+                              placeholder="Merchant Name"
+                              className="w-full"
+                              {...field}
                             />
-                          </div>
-                          <div className="grid space-y-3">
-                            <Label htmlFor="amount">TVQ(QST)</Label>
-                            <FormField
-                              control={form.control}
-                              name="tvq"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                                  <FormControl>
-                                    <Input
-                                      id="amount"
-                                      placeholder="Amount"
-                                      className="w-[210px] sm:w-full xsm:w-full"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <Label htmlFor="project">Project</Label>
+                    <FormField
+                      control={form.control}
+                      name="project"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                asChild
+                                className="w-full h-full xsm:w-full overflow-hidden"
+                              >
+                                <Button variant="outline">
+                                  {field.value ? (
+                                    field.value
+                                  ) : (
+                                    <span>Choose a project</span>
+                                  )}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-full h-full break-all">
+                                <DropdownMenuLabel>
+                                  Choose a project
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                  className="w-full text-center"
+                                >
+                                  <DropdownMenuRadioItem value="CAM1">
+                                    CAM1
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="CAM2">
+                                    CAM2
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="PCAM">
+                                    PCAM
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="N/A">
+                                    N/A
+                                  </DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="flex w-full gap-3 mt-5">
+                  <div className="w-1/2">
+                    <Label htmlFor="purpose">Purpose of Payment</Label>
+                    <FormField
+                      control={form.control}
+                      name="purpose"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Please provide the specific purpose of payment"
+                              className="w-full"
+                              {...field}
                             />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-20 sm:gap-3 xsm:gap-3">
-                      <div className="grid space-y-3">
-                        <Label htmlFor="merchant_name">Merchant Name</Label>
-                        <FormField
-                          control={form.control}
-                          name="merchant_name"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <Input
-                                  id="merchant_name"
-                                  placeholder="Merchant Name"
-                                  className="w-[280px] sm:w-[180px] xsm:w-[150px]"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="w-full grid space-y-3">
-                        <Label htmlFor="project">Project</Label>
-                        <FormField
-                          control={form.control}
-                          name="project"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger
-                                    asChild
-                                    className="w-full h-full xsm:w-full overflow-hidden"
-                                  >
-                                    <Button variant="outline">
-                                      {field.value ? (
-                                        field.value
-                                      ) : (
-                                        <span>Choose a project</span>
-                                      )}
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="w-full h-full break-all">
-                                    <DropdownMenuLabel>
-                                      Choose a project
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuRadioGroup
-                                      value={field.value}
-                                      onValueChange={field.onChange}
-                                      className="w-[400px] text-center"
-                                    >
-                                      <DropdownMenuRadioItem value="CAM1">
-                                        CAM1
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="CAM2">
-                                        CAM2
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="PCAM">
-                                        PCAM
-                                      </DropdownMenuRadioItem>
-                                      <DropdownMenuRadioItem value="N/A">
-                                        N/A
-                                      </DropdownMenuRadioItem>
-                                    </DropdownMenuRadioGroup>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex gap-20 sm:gap-3 xsm:gap-3">
-                      <div className="grid space-y-3">
-                        <Label htmlFor="purpose">Purpose of Payment</Label>
-                        <FormField
-                          control={form.control}
-                          name="purpose"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Please provide the specific purpose of payment"
-                                  className="w-[280px] sm:w-[180px] xsm:w-full"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="grid space-y-3">
-                        <Label htmlFor="attendees">Attendees</Label>
-                        <FormField
-                          control={form.control}
-                          name="attendees"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
-                              <FormControl>
-                                <Textarea
-                                  placeholder="Attendees"
-                                  className="w-[413px] sm:w-full xsm:w-full"
-                                  {...field}
-                                />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <Label htmlFor="attendees">Attendees</Label>
+                    <FormField
+                      control={form.control}
+                      name="attendees"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormMessage className="-mt-2 text-[13.5px]"></FormMessage>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Attendees"
+                              className="w-[413px] sm:w-full xsm:w-full"
+                              {...field}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
                 <div className="w-full mt-5">

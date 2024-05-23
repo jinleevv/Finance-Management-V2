@@ -18,7 +18,7 @@ export function UploadTransactions() {
     <>
       <MobileNav />
       <div className="flex">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12" />
         <UploadTransactionsForm />
         <RightSideBar />
       </div>

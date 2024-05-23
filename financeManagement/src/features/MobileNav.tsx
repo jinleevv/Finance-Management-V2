@@ -11,7 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { Footer } from "@/features/Footer";
 
 export function MobileNav() {
-  const { currentPage, setCurrentPage } = useHooks();
+  const {
+    currentPage,
+    clientI,
+    calenderDate,
+    userFirstName,
+    userLastName,
+    setMyMissingUploadedData,
+    setMyMissingBankData,
+    setCurrentPage,
+  } = useHooks();
   const navigate = useNavigate();
 
   function handleHomeNavigate() {
@@ -27,6 +36,37 @@ export function MobileNav() {
   function handleUploadNavigate() {
     setCurrentPage("Upload Transactions");
     navigate("/upload-transactions");
+  }
+
+  async function handleMissingTransactionsNavigate() {
+    await clientI
+      .post("/api/missing-transaction-lists/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        setMyMissingUploadedData(res.data);
+      });
+    await clientI
+      .post("/api/status-bank-transactions/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        let response_data = new Array();
+        res.data.data.map((item) => {
+          if (item.status === "Unmatched") {
+            response_data.push(item);
+          }
+        });
+        setMyMissingBankData(response_data);
+      });
+    setCurrentPage("/missing-transactions");
+    navigate("/missing-transactions");
   }
   return (
     <section className="sticky flex w-full p-3 justify-between border-b border-gray-200 shadow-sm md:hidden">
@@ -48,7 +88,7 @@ export function MobileNav() {
           <SheetClose asChild>
             <nav>
               <div className="space-y-2">
-                {currentPage === "Home" ? (
+                {currentPage === "/home" ? (
                   <SheetClose asChild>
                     <Button
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
@@ -74,7 +114,7 @@ export function MobileNav() {
                     </Button>
                   </SheetClose>
                 )}
-                {currentPage === "Transaction History" ? (
+                {currentPage === "/transaction-history" ? (
                   <SheetClose asChild>
                     <Button
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
@@ -100,7 +140,7 @@ export function MobileNav() {
                     </Button>
                   </SheetClose>
                 )}
-                {currentPage === "Upload Transactions" ? (
+                {currentPage === "/upload-transactions" ? (
                   <SheetClose asChild>
                     <Button
                       className="flex w-full h-16 text-left gap-2 overflow-auto"
@@ -122,6 +162,32 @@ export function MobileNav() {
                       <img src="/icons/dollar-circle.svg" />
                       <span className="w-full font-semibold text-black-2">
                         Upload Transactions
+                      </span>
+                    </Button>
+                  </SheetClose>
+                )}
+                {currentPage === "/missing-transactions" ? (
+                  <SheetClose asChild>
+                    <Button
+                      className="flex w-full h-16 text-left gap-2 overflow-auto"
+                      onClick={handleMissingTransactionsNavigate}
+                    >
+                      <img src="/icons/dollar-circle.svg" />
+                      <span className="w-full font-semibold text-black-2">
+                        Missing Transactions
+                      </span>
+                    </Button>
+                  </SheetClose>
+                ) : (
+                  <SheetClose asChild>
+                    <Button
+                      className="flex w-full h-16 text-left gap-2 overflow-auto"
+                      variant="ghost"
+                      onClick={handleMissingTransactionsNavigate}
+                    >
+                      <img src="/icons/dollar-circle.svg" />
+                      <span className="w-full font-semibold text-black-2">
+                        Missing Transactions
                       </span>
                     </Button>
                   </SheetClose>

@@ -150,9 +150,6 @@ export function UploadTransactionsForm() {
             tps: "",
             tvq: "",
             merchant_name: "",
-            purpose: "",
-            project: "",
-            attendees: "",
             file: null,
           });
 

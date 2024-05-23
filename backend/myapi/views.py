@@ -452,16 +452,18 @@ class DownloadReciptImages(APIView):
 class MyMissingTransactionLists(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
-    def get(self, request):
-        serializer = UserSerializer(request.user)
+    def post(self, request):
+        data = request.data
 
-        first_name = serializer.data['first_name']
-        last_name = serializer.data['last_name']
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        date_from = data.get('date_from')
+        date_to = data.get('date_to')
 
-        transactions = TaxTransactionForm.objects.filter(first_name=first_name.upper(), last_name=last_name.upper())
-        bank_transactions = BankTransactionList.objects.filter(first_name=first_name.upper(), last_name=last_name.upper())
+        transactions = TaxTransactionForm.objects.filter(trans_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper())
+        bank_transactions = BankTransactionList.objects.filter(trans_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper())
         
-        transaction_dicts = [{'trans_date': obj.trans_date, 'billing_amount': obj.billing_amount, 'merchant_name': obj.merchant_name, 'category':obj.category, 'purpose': obj.purpose, 'first_name': obj.first_name, 'last_name': obj.last_name} for obj in transactions]
+        transaction_dicts = [{'trans_date': obj.trans_date, 'billing_amount': obj.billing_amount, 'merchant_name': obj.merchant_name, 'category':obj.category, 'purpose': obj.purpose, "tps": obj.tps, "tvq": obj.tvq, "project": obj.project, "attendees": obj.attendees, 'first_name': obj.first_name, 'last_name': obj.last_name} for obj in transactions]
         bank_transactions_dicts = [{'trans_date': obj.trans_date, 'billing_amount': obj.billing_amount, 'first_name': obj.first_name, 'last_name': obj.last_name} for obj in bank_transactions]
         
         one_to_one_missing_element = []

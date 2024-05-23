@@ -17,7 +17,7 @@ export function TransactionHistoryPage() {
     <>
       <MobileNav />
       <div className="flex">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12"/>
         <TransactionHistory />
         <RightSideBar />
       </div>

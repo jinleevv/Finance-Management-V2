@@ -47,16 +47,16 @@ export function CardBalanceInformation() {
             if (item.department === userDepartment) {
               setCurrentBalance(item.usage);
               setRemainingBalance(item.limit - item.usage);
-              if (currentBalance >= item.limit - item.usage) {
-                setBalanceStatus("Bad");
-              } else {
-                setBalanceStatus("Good");
-              }
+              // if (currentBalance >= item.limit - item.usage) {
+              //   setBalanceStatus("Bad");
+              // } else {
+              //   setBalanceStatus("Good");
+              // }
             }
           });
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {});
   }, []);
 
   return (
@@ -73,7 +73,7 @@ export function CardBalanceInformation() {
         <div className="w-full">
           <CardTitle className="text-2xl">Current Balance</CardTitle>
           <CardDescription>
-            Corporate Credit Card Limit: {formatAmount(10000)}
+            Corporate Credit Card Limit: {formatAmount(0)}
           </CardDescription>
         </div>
         <div className="flex w-full mt-5 space-x-5">
@@ -89,20 +89,14 @@ export function CardBalanceInformation() {
           </Label>
           <Label className="lg:flex grid text-md font-bold space-x-1">
             <span>Remaining Balance:</span>
-            <CountUp
-              decimals={2}
-              decimal="."
-              prefix="$"
-              end={remainingBalance}
-              duration={1}
-            />
+            <CountUp decimals={2} decimal="." prefix="$" end={0} duration={1} />
           </Label>
         </div>
         <div className="mt-5">
           <Label className="flex text-md font-bold">
             Status:{" "}
             <div className="ml-2 -mt-0.5">
-              <StatusBadge status={balanceStatus} />
+              <StatusBadge status={"Good"} />
             </div>
           </Label>
         </div>

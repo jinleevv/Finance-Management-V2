@@ -18,7 +18,7 @@ export function DownloadTransactionsPage() {
     <>
       <MobileNav />
       <div className="flex">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12"/>
         <DownloadTransaction />
         <RightSideBar />
       </div>

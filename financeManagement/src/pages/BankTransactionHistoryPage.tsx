@@ -18,7 +18,7 @@ export function BankTransactionHistoryPage() {
     <>
       <MobileNav />
       <div className="flex">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12"/>
         <BankTransactionHistory />
         <RightSideBar />
       </div>

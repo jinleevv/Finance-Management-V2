@@ -18,7 +18,7 @@ export function DepartmentCreditLimitPage() {
     <>
       <MobileNav />
       <section className="flex w-full h-screen">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12"/>
         <DepartmentCreditLimit />
         <RightSideBar />
       </section>

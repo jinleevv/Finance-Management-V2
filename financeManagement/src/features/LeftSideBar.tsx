@@ -12,10 +12,13 @@ import {
   LuSettings2,
 } from "react-icons/lu";
 
-export function LeftSideBar() {
+interface LeftSideBarProps {
+  width: string;
+}
+
+export function LeftSideBar({ width }: LeftSideBarProps) {
   const {
     clientI,
-    clientII,
     calenderDate,
     currentPage,
     userFirstName,
@@ -29,6 +32,7 @@ export function LeftSideBar() {
     setMyMissingUploadedData,
   } = useHooks();
   const navigate = useNavigate();
+  const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`
 
   function handleHomeNavigate() {
     setCurrentPage("/home");
@@ -93,9 +97,16 @@ export function LeftSideBar() {
   }
 
   async function handleMissingTransactionsNavigate() {
-    await clientII.get("/api/missing-transaction-lists/").then((res) => {
-      setMyMissingUploadedData(res.data);
-    });
+    await clientI
+      .post("/api/missing-transaction-lists/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+        first_name: userFirstName,
+        last_name: userLastName,
+      })
+      .then((res) => {
+        setMyMissingUploadedData(res.data);
+      });
     await clientI
       .post("/api/status-bank-transactions/", {
         date_from: calenderDate.from.toISOString().split("T")[0],
@@ -104,14 +115,20 @@ export function LeftSideBar() {
         last_name: userLastName,
       })
       .then((res) => {
-        setMyMissingBankData(res.data.data);
+        let response_data = new Array();
+        res.data.data.map((item) => {
+          if (item.status === "Unmatched") {
+            response_data.push(item);
+          }
+        });
+        setMyMissingBankData(response_data);
       });
     setCurrentPage("/missing-transactions");
     navigate("/missing-transactions");
   }
 
   return (
-    <section className="sticky left-0 top-0 flex h-screen w-4/12 flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden">
+    <section className={style}>
       <nav className="flex flex-col gap-4">
         <div className="grid text-center">
           <Label className="text-black text-2xl font-bold">Ultium CAM</Label>

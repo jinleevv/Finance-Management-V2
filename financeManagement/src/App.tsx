@@ -33,6 +33,7 @@ function App() {
     calenderDate,
     userFirstName,
     userLastName,
+    userDepartment,
     setStatusBankTableData,
     setLoggedInUser,
     setUserFirstName,
@@ -45,6 +46,16 @@ function App() {
   const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     if (!loggedInUser) {
       return <Navigate to="/" />;
+    } else {
+      return children;
+    }
+  };
+
+  const AdminProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+    if (!loggedInUser) {
+      return <Navigate to="/" />;
+    } else if (userDepartment !== "Finance" && userDepartment !== "Admin") {
+      return <Navigate to="/home" />;
     } else {
       return children;
     }
@@ -139,41 +150,41 @@ function App() {
           <Route
             path="/upload-bank-transactions"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <UploadBankTransactionsPage />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           ></Route>
           <Route
             path="/download-transactions"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <DownloadTransactionsPage />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           ></Route>
           <Route
             path="/bank-transaction-history"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <BankTransactionHistoryPage />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           ></Route>
           <Route
             path="/create-account"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <CreateAccountPage />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           ></Route>
           <Route
             path="/department-credit-limit"
             element={
-              <ProtectedRoute>
+              <AdminProtectedRoute>
                 <DepartmentCreditLimitPage />
-              </ProtectedRoute>
+              </AdminProtectedRoute>
             }
           ></Route>
         </Routes>

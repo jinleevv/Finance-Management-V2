@@ -77,7 +77,6 @@ export function CreateAccount() {
             setFailedUserCreation(true);
           });
       } catch (error) {
-        console.log(error);
         setFailedUserCreation(true);
       }
     }

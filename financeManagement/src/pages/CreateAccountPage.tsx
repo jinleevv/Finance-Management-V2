@@ -18,7 +18,7 @@ export function CreateAccountPage() {
     <>
       <MobileNav />
       <section className="flex w-full h-screen">
-        <LeftSideBar />
+        <LeftSideBar width="w-4/12"/>
         <CreateAccount />
         <RightSideBar />
       </section>
