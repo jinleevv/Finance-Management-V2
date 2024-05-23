@@ -91,15 +91,15 @@ const departmentCreditCardInfoAtom = atomWithImmer<Array<any>>([]);
 
 export function useHooks() {
   const clientI = axios.create({
-    baseURL: "http://127.0.0.1:8000",
-    // baseURL: "http://192.168.3.248:8000",
+    // baseURL: "http://127.0.0.1:8000",
+    baseURL: "http://192.168.3.248:8000",
   });
   const clientII = axios.create({
-    baseURL: "http://localhost:8000",
-    // baseURL: "http://card.ultiumcam.local:8000",
+    // baseURL: "http://localhost:8000",
+    baseURL: "http://card.ultiumcam.local:8000",
   });
-  const urlII = "http://localhost:8000";
-  // const urlII = "http://card.ultiumcam.local:8000";
+  // const urlII = "http://localhost:8000";
+  const urlII = "http://card.ultiumcam.local:8000";
 
   const [loggedInUser, setLoggedInUser] = useAtom(loggedInUserAtom);
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);

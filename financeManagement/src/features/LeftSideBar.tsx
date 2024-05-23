@@ -32,7 +32,7 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
     setMyMissingUploadedData,
   } = useHooks();
   const navigate = useNavigate();
-  const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`
+  const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`;
 
   function handleHomeNavigate() {
     setCurrentPage("/home");
@@ -226,7 +226,7 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
             </Button>
           )}
         </div>
-        {userDepartment === "Finance" || "Admin" ? (
+        {userDepartment === "Finance" || userDepartment === "Admin" ? (
           <div className="mt-5">
             <div className="ml-2 mr-2 border-t"></div>
             <div className="mt-6 pl-2 pr-2 space-y-2">
@@ -301,7 +301,7 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
         ) : (
           <div></div>
         )}
-        {userDepartment === "Finance" || "Admin" ? (
+        {userDepartment === "Finance" || userDepartment === "Admin" ? (
           <div className="mt-5">
             <div className="ml-2 mr-2 border-t"></div>
             <div className="mt-6 pl-2 pr-2 space-y-2">
