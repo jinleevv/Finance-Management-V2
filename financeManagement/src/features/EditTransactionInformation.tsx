@@ -177,7 +177,7 @@ export function EditTransactionInformation({
               Edit
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-[820px] rounded-2xl">
+          <DialogContent className="block max-w-[820px] rounded-2xl">
             <DialogHeader>
               <DialogTitle>Edit Transaction Information</DialogTitle>
               <DialogDescription>
@@ -326,7 +326,7 @@ export function EditTransactionInformation({
                       )}
                     />
                   </div>
-                  <div className="flex w-1/2 -mt-1 gap-3">
+                  <div className="flex w-1/2 lg:-mt-1 mt-5 gap-3">
                     <div className="w-1/2">
                       <Label htmlFor="amount">TPS(GST)</Label>
                       <FormField
@@ -359,7 +359,7 @@ export function EditTransactionInformation({
                               <Input
                                 id="amount"
                                 placeholder="Amount"
-                                className="w-[210px] sm:w-full xsm:w-full"
+                                className="w-full"
                                 {...field}
                               />
                             </FormControl>
@@ -475,7 +475,7 @@ export function EditTransactionInformation({
                           <FormControl>
                             <Textarea
                               placeholder="Attendees"
-                              className="w-[413px] sm:w-full xsm:w-full"
+                              className="w-full"
                               {...field}
                             />
                           </FormControl>

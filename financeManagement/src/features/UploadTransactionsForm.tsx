@@ -151,6 +151,9 @@ export function UploadTransactionsForm() {
             tvq: "",
             merchant_name: "",
             file: null,
+            project: "",
+            purpose: "",
+            attendees: "",
           });
 
           toast("Transaction history has been Updated", {

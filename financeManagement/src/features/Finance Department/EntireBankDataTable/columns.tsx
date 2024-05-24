@@ -1,6 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { EntireBankTransactionsData } from "@/hooks";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
 
 export const EntireBankColumns: ColumnDef<EntireBankTransactionsData>[] = [
   {
@@ -25,11 +27,31 @@ export const EntireBankColumns: ColumnDef<EntireBankTransactionsData>[] = [
   },
   {
     accessorKey: "trans_date",
-    header: "Trans Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Trans Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "post_date",
-    header: "Post Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Post Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "billing_amount",

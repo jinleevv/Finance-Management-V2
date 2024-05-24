@@ -73,7 +73,7 @@ export function CardBalanceInformation() {
         <div className="w-full">
           <CardTitle className="text-2xl">Current Balance</CardTitle>
           <CardDescription>
-            Corporate Credit Card Limit: {formatAmount(0)}
+            Corporate Credit Card Limit: Currently Testing
           </CardDescription>
         </div>
         <div className="flex w-full mt-5 space-x-5">
@@ -89,7 +89,7 @@ export function CardBalanceInformation() {
           </Label>
           <Label className="lg:flex grid text-md font-bold space-x-1">
             <span>Remaining Balance:</span>
-            <CountUp decimals={2} decimal="." prefix="$" end={0} duration={1} />
+            {/* <CountUp decimals={2} decimal="." prefix="$" end={0} duration={1} /> */}
           </Label>
         </div>
         <div className="mt-5">
