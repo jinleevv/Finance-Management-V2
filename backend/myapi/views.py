@@ -165,8 +165,8 @@ class DownloadTransactions(APIView):
         department_info_names = list(department_info.keys())
 
         constructions = ['Procurement', 'Contruction Operation']
-        construction_options = ['12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_supporting discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
-        general_options = ['52202101 Travel', '52212102 Selling and administrative expenses_entertainment expenses_employees', '52201123 Selling and administrative expenses, welfare expenses, supporting discussion', '52224102 Selling and administrative expenses_conference expenses_employees', '52216111 Bank charges', '52221199 Car expenses']
+        construction_options = ['12395202 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
+        general_options = ['52202101 Travel(Meal)','52202101 Travel', '52212102 Selling and administrative expenses_entertainment expenses_employees', '52201123 Selling and administrative expenses, welfare expenses, supporting discussion', '52224102 Selling and administrative expenses_conference expenses_employees', '52216111 Bank charges', '52221199 Car expenses']
         
         try:
             return_data = []
@@ -266,33 +266,37 @@ class DownloadTransactions(APIView):
                     department = department_info[full_name]
                     
                 if department in constructions:
-                    if match_item.category == 'Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)':
+                    if match_item.category == 'Business Trip (Meal)':
                         account = construction_options[0]
-                    elif match_item.category == 'Meeting with Business Partners':
+                    elif match_item.category == 'Business Trip (Hotel,Gas,Parking,Toll,Trasportation)':
                         account = construction_options[1]
+                    elif match_item.category == 'Meeting with Business Partners':
+                        account = construction_options[2]
                     elif match_item.category == 'Meeting between employees':
-                            account = construction_options[2]
+                            account = construction_options[3]
                     elif match_item.category == 'Business Conference, Seminar, Workshop':
-                        account = construction_options[3]
-                    elif match_item.category == 'Banking Fees':
                         account = construction_options[4]
-                    elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
+                    elif match_item.category == 'Banking Fees':
                         account = construction_options[5]
+                    elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
+                        account = construction_options[6]
                     else:
                         account = ""
                 else:
-                    if match_item.category == 'Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)':
+                    if match_item.category == 'Business Trip (Meal)':
                         account = general_options[0]
-                    elif match_item.category == 'Meeting with Business Partners':
+                    elif match_item.category == 'Business Trip (Hotel,Gas,Parking,Toll,Trasportation)':
                         account = general_options[1]
-                    elif match_item.category == 'Meeting between employees':
+                    elif match_item.category == 'Meeting with Business Partners':
                         account = general_options[2]
-                    elif match_item.category == 'Business Conference, Seminar, Workshop':
+                    elif match_item.category == 'Meeting between employees':
                         account = general_options[3]
-                    elif match_item.category == 'Banking Fees':
+                    elif match_item.category == 'Business Conference, Seminar, Workshop':
                         account = general_options[4]
-                    elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
+                    elif match_item.category == 'Banking Fees':
                         account = general_options[5]
+                    elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
+                        account = general_options[6]
                     else:
                         account = ""
                         
