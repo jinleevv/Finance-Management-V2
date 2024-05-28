@@ -369,9 +369,12 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
                                   value={field.value}
                                   onValueChange={field.onChange}
                                 >
-                                  <DropdownMenuRadioItem value="Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)">
+                                  <DropdownMenuRadioItem value="Business Trip (Meal)">
+                                    Business Trip (Meal)
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Business Trip (Hotel,Gas,Parking,Toll,Trasportation)">
                                     Business Trip
-                                    (Hotel,Food,Gas,Parking,Toll,Trasportation)
+                                    (Hotel,Gas,Parking,Toll,Trasportation)
                                   </DropdownMenuRadioItem>
                                   <DropdownMenuRadioItem value="Meeting with Business Partners">
                                     Meeting with Business Partners

@@ -270,6 +270,8 @@ class DownloadTransactions(APIView):
                         account = construction_options[0]
                     elif match_item.category == 'Business Trip (Hotel,Gas,Parking,Toll,Trasportation)':
                         account = construction_options[1]
+                    elif match_item.category == 'Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)':
+                        account = construction_options[1]
                     elif match_item.category == 'Meeting with Business Partners':
                         account = construction_options[2]
                     elif match_item.category == 'Meeting between employees':
@@ -286,6 +288,8 @@ class DownloadTransactions(APIView):
                     if match_item.category == 'Business Trip (Meal)':
                         account = general_options[0]
                     elif match_item.category == 'Business Trip (Hotel,Gas,Parking,Toll,Trasportation)':
+                        account = general_options[1]
+                    elif match_item.category == 'Business Trip(Hotel,Food,Gas,Parking,Toll,Trasportation)':
                         account = general_options[1]
                     elif match_item.category == 'Meeting with Business Partners':
                         account = general_options[2]
@@ -668,11 +672,15 @@ class StatusBankTransactions(APIView):
 
             return_data = []
             bank_lists = BankTransactionList.objects.filter(post_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper()).order_by('-post_date')
+            transaction_lists = list(TaxTransactionForm.objects.values_list('trans_date', 'billing_amount', 'tps', 'tvq', 'merchant_name', 'category', 'purpose', 'first_name', 'last_name', 'project', 'attendees', 'department'))
 
             for item in bank_lists:
                 try:
                     match_item = TaxTransactionForm.objects.get(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())
-                
+                    match_item_tuple = tuple(getattr(match_item, field.name) for field in match_item._meta.fields)
+                    match_item_tuple = match_item_tuple[1:]
+                    transaction_lists.remove(match_item_tuple[:7] + match_item_tuple[8:])
+
                 except ObjectDoesNotExist:
                     item_dict = {
                     'status': 'Unmatched',
@@ -689,7 +697,48 @@ class StatusBankTransactions(APIView):
                 
                 except MultipleObjectsReturned:
                     match_items = TaxTransactionForm.objects.filter(trans_date=item.trans_date, billing_amount=item.billing_amount, first_name=item.first_name.upper(), last_name=item.last_name.upper())    
-                    match_item = match_items[0]
+                    match_item = 0
+
+                    try:
+                        for i in match_items:
+                            match_item_tuple = tuple(getattr(i, field.name) for field in i._meta.fields)
+                            match_item_tuple = match_item_tuple[1:]
+                            try:
+                                transaction_lists.remove(match_item_tuple[:7] + match_item_tuple[8:])
+                                match_item = i
+                                break
+                            except ValueError:
+                                continue
+                        if match_item == 0:
+                            item_dict = {
+                            'status': 'Unmatched',
+                            'trans_date': item.trans_date,
+                            'post_date': item.post_date,
+                            'merchant_name': item.merchant_name,
+                            'billing_amount': item.billing_amount,
+                            'full_name': item.first_name.upper() + " " + item.last_name.upper(),
+                            }
+                            return_data.append(item_dict)
+
+                            continue
+
+                    except ValueError:
+                        continue
+                
+                except ValueError:
+                    item_dict = {
+                    'status': 'Unmatched',
+                    'trans_date': item.trans_date,
+                    'post_date': item.post_date,
+                    'merchant_name': item.merchant_name,
+                    'billing_amount': item.billing_amount,
+                    'full_name': item.first_name.upper() + " " + item.last_name.upper(),
+                    }
+                
+                    return_data.append(item_dict)
+
+                    continue
+
 
                 item_dict = {
                     'status': 'Matched',
