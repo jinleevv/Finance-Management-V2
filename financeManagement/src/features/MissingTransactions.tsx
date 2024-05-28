@@ -130,8 +130,8 @@ export function MissingTransactions() {
 
         <Button onClick={handleFilterByDates}>Search</Button>
       </div>
-      <div className="flex w-full mt-2 gap-3 h-4/5">
-        <div className="w-1/2 h-full ml-3 rounded-lg border p-3 overflow-auto">
+      <div className="lg:flex w-full mt-2 lg:gap-3 lg:space-y-0 space-y-5 lg:h-4/5 h-80">
+        <div className="lg:w-1/2 h-full lg:ml-3 rounded-lg border p-3 overflow-auto">
           <Label className="flex text-lg font-bold justify-center">
             Remaining Items (Your List)
           </Label>
@@ -140,7 +140,7 @@ export function MissingTransactions() {
             data={myMissingUploadedData}
           />
         </div>
-        <div className="w-1/2 h-full mr-3 rounded-lg border p-3 overflow-auto">
+        <div className="lg:w-1/2 h-full lg:mr-3 rounded-lg border p-3 overflow-auto">
           <div className="mb-5">
             <Label className="flex text-lg font-bold justify-center">
               Remaining Items (Bank List)

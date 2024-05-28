@@ -10,11 +10,16 @@ export function TransactionHistory() {
   return (
     <>
       <div className="w-full h-screen">
-        <div className="h-[800px] ml-10 mt-12 mr-10">
+        <div className="h-[800px] lg:ml-10 mt-12 lg:mr-10 ml-3 mr-3">
           <Label className="text-2xl font-bold">
             Uploaded Transactions History
           </Label>
-          <MyDataTable columns1={columns} data1={myTableData} columns2={StatusBankColumns} data2={statusBankTableData} />
+          <MyDataTable
+            columns1={columns}
+            data1={myTableData}
+            columns2={StatusBankColumns}
+            data2={statusBankTableData}
+          />
         </div>
       </div>
     </>

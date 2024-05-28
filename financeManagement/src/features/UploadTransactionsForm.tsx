@@ -198,13 +198,13 @@ export function UploadTransactionsForm() {
   }
   return (
     <section className="w-full">
-      <div className="mt-12 ml-10 mr-10">
+      <div className="mt-12 lg:ml-10 lg:mr-10 ml-3 mr-3">
         <Label className="grid text-2xl font-bold">
           Corporate Card Transaction Upload Form
         </Label>
         <Label className="ml-1">Corporate Card Transaction Information</Label>
       </div>
-      <div className="mt-12 ml-10 mr-10">
+      <div className="mt-12 lg:ml-10 lg:mr-10 ml-3 mr-3">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
             <div>

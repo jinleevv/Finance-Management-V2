@@ -298,7 +298,7 @@ export function MyDataTable<TData1, TData2, TValue>({
         defaultValue={transactionHistoryTab}
         onValueChange={handleTabChange}
       >
-        <div className="flex w-full gap-1 mt-8 mb-4 justify-end">
+        <div className="flex w-full gap-1 mt-8 mb-4 lg:justify-end justify-center">
           <Popover>
             <PopoverTrigger asChild>
               <Button

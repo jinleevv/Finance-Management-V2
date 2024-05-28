@@ -16,7 +16,7 @@ export function MissingTransactionsPage() {
     <>
       <MobileNav />
       <div className="flex">
-        <LeftSideBar width="w-3/12"/>
+        <LeftSideBar width="w-3/12" />
         <MissingTransactions />
       </div>
     </>
