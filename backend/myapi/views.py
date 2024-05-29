@@ -845,3 +845,22 @@ class DepartmentCreditCardLimit(APIView):
         department_limit.limit = float(new_limit)
         department_limit.save()
         return Response({'message': 'Department limit updated successfully'}, status=status.HTTP_200_OK)
+    
+class UserCreditCardLimit(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+    def post(self, request):
+        data = request.data
+
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        date_from = data.get('date_from')
+        date_to = data.get('date_to')
+
+        my_data = TaxTransactionForm.objects.filter(trans_date__range=(date_from, date_to), first_name=first_name.upper(), last_name=last_name.upper())
+
+        # Sum up all billing_amount from the filtered data
+        total_billing_amount = my_data.aggregate(total=Sum('billing_amount'))['total']
+        
+        # Return or process the total_billing_amount as needed
+        return JsonResponse({'total_billing_amount': total_billing_amount})

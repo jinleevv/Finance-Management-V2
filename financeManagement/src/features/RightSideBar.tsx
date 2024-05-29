@@ -33,7 +33,9 @@ export function RightSideBar() {
         <div className="h-[120px] w-full bg-gradient-mesh bg-cover bg-no-repeat">
           <div className="relative flex px-6 max-xl:justify-center">
             <div className="flex-center absolute top-16 size-24 rounded-full bg-gray-100 border-8 border-white p-4 shadow-profile">
-              <span className="text-5xl font-bold text-black m-2.5">J</span>
+              <span className="text-5xl font-bold text-black m-2.5">
+                {userFullName[0]}
+              </span>
             </div>
             <div className="flex flex-col pt-44">
               <Label className="text-3xl font-bold">{userFullName}</Label>

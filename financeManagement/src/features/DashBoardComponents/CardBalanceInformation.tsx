@@ -15,8 +15,15 @@ import { DateRange } from "react-day-picker";
 import { startOfMonth, endOfMonth } from "date-fns";
 
 export function CardBalanceInformation() {
-  const { clientI, userDepartment, balanceStatus, setBalanceStatus } =
-    useHooks();
+  const {
+    clientI,
+    calenderDate,
+    userFirstName,
+    userLastName,
+    userDepartment,
+    balanceStatus,
+    setBalanceStatus,
+  } = useHooks();
 
   const [currentBalance, setCurrentBalance] = useState<number>(0);
   const [remainingBalance, setRemainingBalance] = useState<number>(0);
@@ -42,19 +49,29 @@ export function CardBalanceInformation() {
         date_to: date.to.toISOString().split("T")[0],
       })
       .then(() => {
-        clientI.get("/api/department-credit-card-limit/").then((res) => {
-          res.data.map((item) => {
-            if (item.department === userDepartment) {
-              setCurrentBalance(item.usage);
-              setRemainingBalance(item.limit - item.usage);
-              // if (currentBalance >= item.limit - item.usage) {
-              //   setBalanceStatus("Bad");
-              // } else {
-              //   setBalanceStatus("Good");
-              // }
-            }
+        // clientI.get("/api/department-credit-card-limit/").then((res) => {
+        //   res.data.map((item) => {
+        //     if (item.department === userDepartment) {
+        //       setCurrentBalance(item.usage);
+        //       setRemainingBalance(item.limit - item.usage);
+        //       // if (currentBalance >= item.limit - item.usage) {
+        //       //   setBalanceStatus("Bad");
+        //       // } else {
+        //       //   setBalanceStatus("Good");
+        //       // }
+        //     }
+        //   });
+        // });
+        clientI
+          .post("/api/user-credit-card-limit/", {
+            date_from: calenderDate.from.toISOString().split("T")[0],
+            date_to: calenderDate.to.toISOString().split("T")[0],
+            first_name: userFirstName,
+            last_name: userLastName,
+          })
+          .then((res) => {
+            setCurrentBalance(res.data.total_billing_amount);
           });
-        });
       })
       .catch((err) => {});
   }, []);
