@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, ChangePasswordSerializer
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
-from .models import TaxTransactionForm, BankTransactionList, DepartmentCreditLimit
+from .models import TaxTransactionForm, BankTransactionList, DepartmentCreditLimit, AppUser
 from datetime import datetime
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.conf import settings
@@ -161,8 +161,8 @@ class DownloadTransactions(APIView):
         data = request.data
         date_from = data.get('date_from')
         date_to = data.get('date_to')
-        department_info = {'SOONKI JEONG' : 'IT Security', 'JUNGHOON HA': 'Contruction Operation', 'JONGHOON LEE' : 'Finance', 'HWA SUNG KANG' : 'Procurement', 'WEON-KU YEO': 'Contruction Operation', 'CHI GYU CHA': 'President'}
-        department_info_names = list(department_info.keys())
+        department_info = AppUser.objects.all().values_list('first_name', 'last_name', 'department')
+        department_info_names = list(department_info)
 
         constructions = ['Procurement', 'Contruction Operation']
         construction_options = ['12395202 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
@@ -261,10 +261,13 @@ class DownloadTransactions(APIView):
                     continue
 
                 department = ""
-                full_name = item.first_name.upper() + item.last_name.upper()
-                if full_name in department_info_names:
-                    department = department_info[full_name]
-                    
+                full_name = item.first_name.upper() + " " + item.last_name.upper()
+                
+                for user in department_info_names:
+                    user_full_name = user[0].upper() + " " + user[1].upper()
+                    if full_name == user_full_name:
+                        department = user[2]
+                                        
                 if department in constructions:
                     if match_item.category == 'Business Trip (Meal)':
                         account = construction_options[0]
