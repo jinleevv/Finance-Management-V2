@@ -153,6 +153,21 @@ class EntireCardTransactionHistory(APIView):
         
         return JsonResponse(data_list, safe=False)
 
+class EntireUserUploadedHistory(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+    def post(self, request):
+        data = request.data
+
+        date_from = datetime.strptime(data.get('date_from'), "%Y-%m-%d")
+        date_to = datetime.strptime(data.get('date_to'), "%Y-%m-%d")
+
+        filtered_data = TaxTransactionForm.objects.filter(trans_date__range=[date_from, date_to])
+
+        my_data = list(filtered_data.values())
+
+        return JsonResponse(my_data, safe=False, status=status.HTTP_200_OK)
+
 class DownloadTransactions(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
@@ -165,7 +180,7 @@ class DownloadTransactions(APIView):
         department_info_names = list(department_info)
 
         constructions = ['Procurement', 'Contruction Operation']
-        construction_options = ['12395202 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
+        construction_options = ['12395202-1 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
         general_options = ['52202101 Travel(Meal)','52202101 Travel', '52212102 Selling and administrative expenses_entertainment expenses_employees', '52201123 Selling and administrative expenses, welfare expenses, supporting discussion', '52224102 Selling and administrative expenses_conference expenses_employees', '52216111 Bank charges', '52221199 Car expenses']
         
         try:
@@ -578,6 +593,22 @@ class FilterByDates(APIView):
         last_name = data.get('last_name')
 
         filtered_data = TaxTransactionForm.objects.filter(first_name=first_name.upper(), last_name=last_name.upper(), trans_date__range=[date_from, date_to])
+
+        my_data = list(filtered_data.values())
+
+        return JsonResponse(my_data, safe=False, status=status.HTTP_200_OK)
+    
+class EntireFilterByDates(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+
+    def post(self, request):
+        data = request.data
+
+        date_from = datetime.strptime(data.get('date_from'), "%Y-%m-%d")
+        date_to = datetime.strptime(data.get('date_to'), "%Y-%m-%d")
+
+        filtered_data = TaxTransactionForm.objects.filter(trans_date__range=[date_from, date_to])
 
         my_data = list(filtered_data.values())
 

@@ -30,6 +30,7 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
     setDepartmentCreditCardInfo,
     setMyMissingBankData,
     setMyMissingUploadedData,
+    setEntireUserUploadedTransactions,
   } = useHooks();
   const navigate = useNavigate();
   const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`;
@@ -79,6 +80,20 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
         setEntireBankTableDate(res.data);
         setCurrentPage("/bank-transaction-history");
         navigate("/bank-transaction-history");
+      })
+      .catch(() => toast("Error: Cannot load the page"));
+  }
+
+  async function handleControlUploadedTransactionsNavigate() {
+    await clientI
+      .post("/api/entire-user-uploaded-history/", {
+        date_from: calenderDate.from.toISOString().split("T")[0],
+        date_to: calenderDate.to.toISOString().split("T")[0],
+      })
+      .then((res) => {
+        setEntireUserUploadedTransactions(res.data);
+        setCurrentPage("/control-uploaded-transactions");
+        navigate("/control-uploaded-transactions");
       })
       .catch(() => toast("Error: Cannot load the page"));
   }
@@ -293,6 +308,28 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
                   <LuHistory size={25} />
                   <span className="w-full font-semibold text-black-2 max-xl:hidden">
                     Bank Transaction History
+                  </span>
+                </Button>
+              )}
+              {currentPage === "/control-uploaded-transactions" ? (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  onClick={handleControlUploadedTransactionsNavigate}
+                >
+                  <LuBanknote size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Control Uploaded Transactions
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  className="flex w-full h-12 text-left gap-2 overflow-auto"
+                  variant="ghost"
+                  onClick={handleControlUploadedTransactionsNavigate}
+                >
+                  <LuBanknote size={25} />
+                  <span className="w-full font-semibold text-black-2 max-xl:hidden">
+                    Control Uploaded Transactions
                   </span>
                 </Button>
               )}

@@ -88,6 +88,9 @@ const topCategoriesAtom = atomWithImmer<TopCategoriesType>({
 });
 const balanceStatusAtom = atomWithImmer<string>("");
 const departmentCreditCardInfoAtom = atomWithImmer<Array<any>>([]);
+const ControlUploadedTransactionsDataAtom = atomWithImmer<
+  Array<MyTransactionsData>
+>([]);
 
 export function useHooks() {
   const clientI = axios.create({
@@ -130,6 +133,8 @@ export function useHooks() {
   const [departmentCreditCardInfo, setDepartmentCreditCardInfo] = useAtom(
     departmentCreditCardInfoAtom
   );
+  const [entireUserUploadedTransactions, setEntireUserUploadedTransactions] =
+    useAtom(ControlUploadedTransactionsDataAtom);
 
   return {
     clientI,
@@ -169,5 +174,7 @@ export function useHooks() {
     setBalanceStatus,
     departmentCreditCardInfo,
     setDepartmentCreditCardInfo,
+    entireUserUploadedTransactions,
+    setEntireUserUploadedTransactions,
   };
 }

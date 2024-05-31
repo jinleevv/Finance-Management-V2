@@ -72,6 +72,7 @@ export function EditTransactionInformation({
     setMyMissingUploadedData,
     setMyTableData,
     setMyMissingBankData,
+    setEntireUserUploadedTransactions,
   } = useHooks();
   const [checked, setChecked] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -135,6 +136,7 @@ export function EditTransactionInformation({
       )
       .then((res) => {
         setMyTableData(res.data);
+        setEntireUserUploadedTransactions(res.data);
       })
       .catch(() => {
         toast("Failed to edit the selected item");

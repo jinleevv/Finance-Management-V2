@@ -1,9 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { MyTransactionsData } from "@/hooks";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 
 export const columns: ColumnDef<MyTransactionsData>[] = [
   {
@@ -37,7 +36,7 @@ export const columns: ColumnDef<MyTransactionsData>[] = [
           Trans Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {
@@ -51,7 +50,16 @@ export const columns: ColumnDef<MyTransactionsData>[] = [
           Amount
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("billing_amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
@@ -65,7 +73,7 @@ export const columns: ColumnDef<MyTransactionsData>[] = [
           Merchant Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {

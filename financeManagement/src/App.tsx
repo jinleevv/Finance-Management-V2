@@ -20,6 +20,7 @@ import { CreateAccountPage } from "@/pages/CreateAccountPage";
 import { DepartmentCreditLimitPage } from "@/pages/DepartmentCreditLimitPage";
 import { MissingTransactionsPage } from "@/pages/MissingTransactionsPage";
 import { ProfilePage } from "@/pages/ProfilePage";
+import { ControlUploadedTransactionsPage } from "@/pages/ControlUploadedTransactionsPage";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -173,6 +174,14 @@ function App() {
             }
           ></Route>
           <Route
+            path="/control-uploaded-transactions"
+            element={
+              <AdminProtectedRoute>
+                <ControlUploadedTransactionsPage />
+              </AdminProtectedRoute>
+            }
+          ></Route>
+          <Route
             path="/create-account"
             element={
               <AdminProtectedRoute>
@@ -191,9 +200,9 @@ function App() {
           <Route
             path="/profile"
             element={
-              <AdminProtectedRoute>
+              <ProtectedRoute>
                 <ProfilePage />
-              </AdminProtectedRoute>
+              </ProtectedRoute>
             }
           ></Route>
         </Routes>

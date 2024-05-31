@@ -59,6 +59,15 @@ export const StatusBankColumns: ColumnDef<StatusBankTransactionsData>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("billing_amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+
+      return <div className="text-right font-medium">{formatted}</div>;
+    },
   },
   {
     accessorKey: "merchant_name",
