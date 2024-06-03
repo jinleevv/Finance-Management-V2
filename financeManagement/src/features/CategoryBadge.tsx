@@ -195,8 +195,6 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
       .catch(() => {
         toast("Unable to filter by given dates");
       });
-
-    await clientI.post("/api/");
   }
 
   return (
