@@ -614,6 +614,22 @@ class EntireFilterByDates(APIView):
 
         return JsonResponse(my_data, safe=False, status=status.HTTP_200_OK)
     
+class EntireBankFilterByDates(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+
+    def post(self, request):
+        data = request.data
+
+        date_from = datetime.strptime(data.get('date_from'), "%Y-%m-%d")
+        date_to = datetime.strptime(data.get('date_to'), "%Y-%m-%d")
+
+        filtered_data = BankTransactionList.objects.filter(trans_date__range=[date_from, date_to])
+
+        my_data = list(filtered_data.values())
+
+        return JsonResponse(my_data, safe=False, status=status.HTTP_200_OK)
+    
 class ForceMatch(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)  

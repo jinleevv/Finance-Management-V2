@@ -67,6 +67,7 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
     userDepartment,
     calenderDate,
     setStatusBankTableData,
+    setMyMissingBankData,
   } = useHooks();
   const fileRef = form.register("file");
   const [checked, setChecked] = useState(false);
@@ -182,11 +183,20 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
         last_name: userLastName,
       })
       .then((res) => {
+        let response_data = new Array();
+        res.data.data.map((item) => {
+          if (item.status === "Unmatched") {
+            response_data.push(item);
+          }
+        });
+        setMyMissingBankData(response_data);
         setStatusBankTableData(res.data.data);
       })
       .catch(() => {
         toast("Unable to filter by given dates");
       });
+
+    await clientI.post("/api/");
   }
 
   return (
