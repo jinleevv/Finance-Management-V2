@@ -149,7 +149,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SESSION_COOKIE_AGE = 1800
+SESSION_COOKIE_AGE = 7200
 
 # Actual directory user files go to
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

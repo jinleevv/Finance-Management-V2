@@ -69,6 +69,8 @@ export function EditTransactionInformation({
     calenderDate,
     userFirstName,
     userLastName,
+    currentQuarterUsage,
+    currentQuarterLimit,
     setMyMissingUploadedData,
     setMyTableData,
     setMyMissingBankData,
@@ -114,6 +116,20 @@ export function EditTransactionInformation({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (
+      currentQuarterUsage + parseFloat(values.billing_amount) >
+      currentQuarterLimit
+    ) {
+      if (values.category == "Meeting with Business Partners") {
+        toast("Over the limit");
+        return;
+      }
+      if (values.category == "Meeting between employees") {
+        toast("Over the limit");
+        return;
+      }
+    }
+
     const editData = {
       trans_date: values.date.toISOString().split("T")[0],
       billing_amount: values.billing_amount,

@@ -31,11 +31,79 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
     setMyMissingBankData,
     setMyMissingUploadedData,
     setEntireUserUploadedTransactions,
+    setCurrentQuarterLimit,
+    setCurrentQuarterUsage,
   } = useHooks();
   const navigate = useNavigate();
   const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`;
 
   function handleHomeNavigate() {
+    clientI.get("/api/department-credit-balance/").then((res) => {
+      const months: string[] = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const currentDate = new Date();
+      const currentMonthIndex = currentDate.getMonth();
+      const currentMonthName = months[currentMonthIndex];
+
+      if (
+        currentMonthName === "January" ||
+        currentMonthName === "February" ||
+        currentMonthName === "March"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q1_limit);
+            setCurrentQuarterUsage(item.q1_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "April" ||
+        currentMonthName === "May" ||
+        currentMonthName === "June"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q2_limit);
+            setCurrentQuarterUsage(item.q2_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "July" ||
+        currentMonthName === "August" ||
+        currentMonthName === "September"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q3_limit);
+            setCurrentQuarterUsage(item.q3_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "October" ||
+        currentMonthName === "November" ||
+        currentMonthName === "December"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q4_limit);
+            setCurrentQuarterUsage(item.q4_usage);
+          }
+        });
+      }
+    });
     setCurrentPage("/home");
     navigate("/home");
   }
@@ -58,7 +126,73 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
     navigate("/transaction-history");
   }
 
-  function handleUploadNavigate() {
+  async function handleUploadNavigate() {
+    await clientI.get("/api/department-credit-balance/").then((res) => {
+      const months: string[] = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const currentDate = new Date();
+      const currentMonthIndex = currentDate.getMonth();
+      const currentMonthName = months[currentMonthIndex];
+
+      if (
+        currentMonthName === "January" ||
+        currentMonthName === "February" ||
+        currentMonthName === "March"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q1_limit);
+            setCurrentQuarterUsage(item.q1_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "April" ||
+        currentMonthName === "May" ||
+        currentMonthName === "June"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q2_limit);
+            setCurrentQuarterUsage(item.q2_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "July" ||
+        currentMonthName === "August" ||
+        currentMonthName === "September"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q3_limit);
+            setCurrentQuarterUsage(item.q3_usage);
+          }
+        });
+      } else if (
+        currentMonthName === "October" ||
+        currentMonthName === "November" ||
+        currentMonthName === "December"
+      ) {
+        res.data.map((item) => {
+          if (item.department === userDepartment) {
+            setCurrentQuarterLimit(item.q4_limit);
+            setCurrentQuarterUsage(item.q4_usage);
+          }
+        });
+      }
+    });
     setCurrentPage("/upload-transactions");
     navigate("/upload-transactions");
   }
@@ -104,11 +238,16 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
   }
 
   async function handleSetDepartmentLimitNavigate() {
-    await clientI.get("/api/department-credit-card-limit").then((res) => {
-      setDepartmentCreditCardInfo(res.data);
-      setCurrentPage("/department-credit-limit");
-      navigate("/department-credit-limit");
-    });
+    await clientI
+      .get("/api/department-credit-card-limit")
+      .then((res) => {
+        setDepartmentCreditCardInfo(res.data);
+        setCurrentPage("/department-credit-limit");
+        navigate("/department-credit-limit");
+      })
+      .catch(() => {
+        toast("Unable to reach this page");
+      });
   }
 
   async function handleMissingTransactionsNavigate() {

@@ -91,6 +91,8 @@ const departmentCreditCardInfoAtom = atomWithImmer<Array<any>>([]);
 const ControlUploadedTransactionsDataAtom = atomWithImmer<
   Array<MyTransactionsData>
 >([]);
+const currentQuarterLimitAtom = atomWithImmer<number>(0);
+const currentQuarterUsageAtom = atomWithImmer<number>(0);
 
 export function useHooks() {
   const clientI = axios.create({
@@ -135,6 +137,12 @@ export function useHooks() {
   );
   const [entireUserUploadedTransactions, setEntireUserUploadedTransactions] =
     useAtom(ControlUploadedTransactionsDataAtom);
+  const [currentQuarterLimit, setCurrentQuarterLimit] = useAtom(
+    currentQuarterLimitAtom
+  );
+  const [currentQuarterUsage, setCurrentQuarterUsage] = useAtom(
+    currentQuarterUsageAtom
+  );
 
   return {
     clientI,
@@ -176,5 +184,9 @@ export function useHooks() {
     setDepartmentCreditCardInfo,
     entireUserUploadedTransactions,
     setEntireUserUploadedTransactions,
+    currentQuarterLimit,
+    setCurrentQuarterLimit,
+    currentQuarterUsage,
+    setCurrentQuarterUsage,
   };
 }

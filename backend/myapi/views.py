@@ -14,6 +14,8 @@ import os
 import shutil
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Count, Sum
+from django.db.models.functions import ExtractYear, ExtractMonth
+import calendar
 import re
 
 class SessionStatus(APIView):
@@ -833,7 +835,54 @@ class TopCategoriesCount(APIView):
 
 class DepartmentCreditCardBalance(APIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = (SessionAuthentication,)  
+    authentication_classes = (SessionAuthentication,)
+    def get(self, request):
+        department_limits = DepartmentCreditLimit.objects.all()
+        
+        # Serialize the data into a list of dictionaries
+        return_value = [
+            {
+                'department': department_limit.department,
+                'total_limit': department_limit.total_limit,
+                'total_usage': department_limit.total_usage,
+                'january_limit': department_limit.january_limit,
+                'january_usage': department_limit.january_usage,
+                'february_limit': department_limit.february_limit,
+                'february_usage': department_limit.february_usage,
+                'march_limit': department_limit.march_limit,
+                'march_usage': department_limit.march_usage,
+                'q1_limit': department_limit.q1_limit,
+                'q1_usage': department_limit.q1_usage,
+                'april_limit': department_limit.april_limit,
+                'april_usage': department_limit.april_usage,
+                'may_limit': department_limit.may_limit,
+                'may_usage': department_limit.may_usage,
+                'june_limit': department_limit.june_limit,
+                'june_usage': department_limit.june_usage,
+                'q2_limit': department_limit.q2_limit,
+                'q2_usage': department_limit.q2_usage,
+                'july_limit': department_limit.july_limit,
+                'july_usage': department_limit.july_usage,
+                'august_limit': department_limit.august_limit,
+                'august_usage': department_limit.august_usage,
+                'september_limit': department_limit.september_limit,
+                'september_usage': department_limit.september_usage,
+                'q3_limit': department_limit.q3_limit,
+                'q3_usage': department_limit.q3_usage,
+                'october_limit': department_limit.october_limit,
+                'october_usage': department_limit.october_usage,
+                'november_limit': department_limit.november_limit,
+                'november_usage': department_limit.november_usage,
+                'december_limit': department_limit.december_limit,
+                'december_usage': department_limit.december_usage,
+                'q4_limit': department_limit.q4_limit,
+                'q4_usage': department_limit.q4_usage,
+            }
+            for department_limit in department_limits
+        ]
+
+        # Return the serialized data as JSON
+        return JsonResponse(return_value, safe=False)
     def post(self, request):
         data = request.data
         date_from = data.get('date_from')
@@ -845,7 +894,7 @@ class DepartmentCreditCardBalance(APIView):
         for entry in total_billing_amounts:
             return_value[entry['department']] = entry['total_billing_amount']
             update_department = DepartmentCreditLimit.objects.get(department=entry['department'])
-            update_department.usage = entry['total_billing_amount']
+            update_department.total_usage = entry['total_billing_amount']
             update_department.save()
 
         return JsonResponse(return_value, safe=False)
@@ -854,14 +903,114 @@ class DepartmentCreditCardLimit(APIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)  
     def get(self, request):
+        # Group by year and month, then sum billing_amount
+        total_billing_amounts = TaxTransactionForm.objects.all().annotate(
+            year=ExtractYear('trans_date'),
+            month=ExtractMonth('trans_date'),
+        ).values(
+            'year', 'month', 'department', 'category'
+        ).annotate(
+            total_billing_amount=Sum('billing_amount')
+        ).order_by('year', 'month', 'department', 'category')
+
+        result = {}
+        for entry in total_billing_amounts:
+            current_year = datetime.now().year
+            data_year = entry['year']
+            if data_year != current_year:
+                continue
+            month = calendar.month_name[int(entry['month'])]
+            if entry['category'] != "Meeting between employees" and entry['category'] != "Meeting with Business Partners":
+                continue
+            try:
+                result[entry['department']][month] = entry['total_billing_amount']
+            except KeyError:
+                result[entry['department']] = {}
+                result[entry['department']][month] = entry['total_billing_amount']
+
+        for department in result:
+            department_limit = DepartmentCreditLimit.objects.get(department=department)
+
+            for update_month in result[department]:
+                if update_month == "January":
+                    department_limit.january_usage = result[department][update_month]
+                    department_limit.q1_usage = department_limit.january_usage + department_limit.february_usage + department_limit.march_usage
+                elif update_month == "February":
+                    department_limit.february_usage = result[department][update_month]
+                    department_limit.q1_usage = department_limit.january_usage + department_limit.february_usage + department_limit.march_usage
+                elif update_month == "March":
+                    department_limit.march_usage = result[department][update_month]
+                    department_limit.q1_usage = department_limit.january_usage + department_limit.february_usage + department_limit.march_usage
+                elif update_month == "April":
+                    department_limit.april_usage = result[department][update_month]
+                    department_limit.q2_usage = department_limit.april_usage + department_limit.may_usage + department_limit.june_usage
+                elif update_month == "May":
+                    department_limit.may_usage = result[department][update_month]
+                    department_limit.q2_usage = department_limit.april_usage + department_limit.may_usage + department_limit.june_usage
+                elif update_month == "June": 
+                    department_limit.june_usage = result[department][update_month]
+                    department_limit.q2_usage = department_limit.april_usage + department_limit.may_usage + department_limit.june_usage
+                elif update_month == "July":
+                    department_limit.july_usage = result[department][update_month]
+                    department_limit.q3_usage = department_limit.july_usage + department_limit.august_usage + department_limit.september_usage
+                elif update_month == "August":
+                    department_limit.august_usage = result[department][update_month]
+                    department_limit.q3_usage = department_limit.july_usage + department_limit.august_usage + department_limit.september_usage                    
+                elif update_month == "September":
+                    department_limit.september_usage = result[department][update_month]
+                    department_limit.q3_usage = department_limit.july_usage + department_limit.august_usage + department_limit.september_usage
+                elif update_month == "October":
+                    department_limit.october_usage = result[department][update_month]
+                    department_limit.q4_usage = department_limit.october_usage + department_limit.november_usage + department_limit.december_usage
+                elif update_month == "November":
+                    department_limit.november_usage = result[department][update_month]
+                    department_limit.q4_usage = department_limit.october_usage + department_limit.november_usage + department_limit.december_usage
+                elif update_month == "December":
+                    department_limit.december_usage = result[department][update_month]
+                    department_limit.q4_usage = department_limit.october_usage + department_limit.november_usage + department_limit.december_usage
+
+                department_limit.save()
+
         department_limits = DepartmentCreditLimit.objects.all()
         
         # Serialize the data into a list of dictionaries
         return_value = [
             {
                 'department': department_limit.department,
-                'limit': department_limit.limit,
-                'usage': department_limit.usage
+                'total_limit': department_limit.total_limit,
+                'total_usage': department_limit.total_usage,
+                'january_limit': department_limit.january_limit,
+                'january_usage': department_limit.january_usage,
+                'february_limit': department_limit.february_limit,
+                'february_usage': department_limit.february_usage,
+                'march_limit': department_limit.march_limit,
+                'march_usage': department_limit.march_usage,
+                'q1_limit': department_limit.q1_limit,
+                'q1_usage': department_limit.q1_usage,
+                'april_limit': department_limit.april_limit,
+                'april_usage': department_limit.april_usage,
+                'may_limit': department_limit.may_limit,
+                'may_usage': department_limit.may_usage,
+                'june_limit': department_limit.june_limit,
+                'june_usage': department_limit.june_usage,
+                'q2_limit': department_limit.q2_limit,
+                'q2_usage': department_limit.q2_usage,
+                'july_limit': department_limit.july_limit,
+                'july_usage': department_limit.july_usage,
+                'august_limit': department_limit.august_limit,
+                'august_usage': department_limit.august_usage,
+                'september_limit': department_limit.september_limit,
+                'september_usage': department_limit.september_usage,
+                'q3_limit': department_limit.q3_limit,
+                'q3_usage': department_limit.q3_usage,
+                'october_limit': department_limit.october_limit,
+                'october_usage': department_limit.october_usage,
+                'november_limit': department_limit.november_limit,
+                'november_usage': department_limit.november_usage,
+                'december_limit': department_limit.december_limit,
+                'december_usage': department_limit.december_usage,
+                'q4_limit': department_limit.q4_limit,
+                'q4_usage': department_limit.q4_usage,
             }
             for department_limit in department_limits
         ]
@@ -874,6 +1023,7 @@ class DepartmentCreditCardLimit(APIView):
         pattern = re.compile(r'^-?\d+(\.\d+)?$')
 
         new_limit = data.get('limit')
+        month=  data.get('month')
         department_name = data.get('department')
 
         try:
@@ -884,12 +1034,73 @@ class DepartmentCreditCardLimit(APIView):
                 return Response({'error': 'Limit is not a number'}, status=status.HTTP_404_NOT_FOUND)
         except DepartmentCreditLimit.DoesNotExist:
             if (bool(pattern.match(new_limit))):
-                DepartmentCreditLimit.objects.create(department=department_name, limit=float(new_limit))
+                DepartmentCreditLimit.objects.create(department=department_name, total_limit=float(new_limit))
                 return Response({'message': 'Department limit updated successfully'}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Department not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        department_limit.limit = float(new_limit)
+        if month == "January":
+            monthsAddedLimits = float(new_limit) + department_limit.february_limit + department_limit.march_limit
+            department_limit.q1_limit = monthsAddedLimits
+
+            department_limit.january_limit = float(new_limit)
+        elif month == "February":
+            monthsAddedLimits = float(new_limit) + department_limit.january_limit + department_limit.march_limit
+            department_limit.q1_limit = monthsAddedLimits
+            
+            department_limit.february_limit = float(new_limit)
+            
+        elif month == "March": 
+            monthsAddedLimits = float(new_limit) + department_limit.february_limit + department_limit.january_limit
+            department_limit.q1_limit = monthsAddedLimits
+            
+            department_limit.march_limit = float(new_limit)
+        elif month == "April":
+            monthsAddedLimits = float(new_limit) + department_limit.may_limit + department_limit.june_limit
+            department_limit.q2_limit = monthsAddedLimits
+            
+            department_limit.april_limit = float(new_limit)
+        elif month == "May":
+            monthsAddedLimits = float(new_limit) + department_limit.april_limit + department_limit.june_limit
+            department_limit.q2_limit = monthsAddedLimits
+            
+            department_limit.may_limit = float(new_limit)
+        elif month == "June":
+            monthsAddedLimits = float(new_limit) + department_limit.may_limit + department_limit.april_limit
+            department_limit.q2_limit = monthsAddedLimits
+            
+            department_limit.june_limit = float(new_limit)
+        elif month == "July":
+            monthsAddedLimits = float(new_limit) + department_limit.august_limit + department_limit.september_limit
+            department_limit.q3_limit = monthsAddedLimits
+            
+            department_limit.july_limit = float(new_limit)
+        elif month == "August":
+            monthsAddedLimits = float(new_limit) + department_limit.july_limit + department_limit.september_limit
+            department_limit.q3_limit = monthsAddedLimits
+            
+            department_limit.august_limit = float(new_limit)
+        elif month == "September":
+            monthsAddedLimits = float(new_limit) + department_limit.august_limit + department_limit.july_limit
+            department_limit.q3_limit = monthsAddedLimits
+            
+            department_limit.september_limit = float(new_limit)
+        elif month == "October":
+            monthsAddedLimits = float(new_limit) + department_limit.november_limit + department_limit.december_limit
+            department_limit.q4_limit = monthsAddedLimits
+
+            department_limit.october_limit = float(new_limit)
+        elif month == "November":
+            monthsAddedLimits = float(new_limit) + department_limit.october_limit + department_limit.december_limit
+            department_limit.q4_limit = monthsAddedLimits
+            
+            department_limit.november_limit = float(new_limit)
+        elif month == "December":
+            monthsAddedLimits = float(new_limit) + department_limit.november_limit + department_limit.october_limit
+            department_limit.q4_limit = monthsAddedLimits
+            
+            department_limit.december_limit = float(new_limit)
+
         department_limit.save()
         return Response({'message': 'Department limit updated successfully'}, status=status.HTTP_200_OK)
     
@@ -911,3 +1122,4 @@ class UserCreditCardLimit(APIView):
         
         # Return or process the total_billing_amount as needed
         return JsonResponse({'total_billing_amount': total_billing_amount})
+

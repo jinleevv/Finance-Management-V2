@@ -118,20 +118,52 @@ class BankTransactionList(models.Model):
         verbose_name_plural = 'Bank Lists'
 
 class DepartmentCreditLimitManager(models.Manager):
-    def create_department(self, department, limit):
-        new_department = self.create(department=department, limit=limit)
+    def create_department(self, department, total_limit):
+        new_department = self.create(department=department, total_limit=total_limit)
         return new_department
     
 class DepartmentCreditLimit(models.Model):
     department = models.CharField(max_length=100)
-    limit = models.FloatField()
-    usage = models.FloatField(default=0)
+    total_limit = models.FloatField()
+    total_usage = models.FloatField(default=0)
+    january_limit = models.FloatField(default=0)
+    january_usage = models.FloatField(default=0)
+    february_limit = models.FloatField(default=0)
+    february_usage = models.FloatField(default=0)
+    march_limit = models.FloatField(default=0)
+    march_usage = models.FloatField(default=0)
+    q1_limit = models.FloatField(default=0)
+    q1_usage = models.FloatField(default=0)
+    april_limit = models.FloatField(default=0)
+    april_usage = models.FloatField(default=0)
+    may_limit = models.FloatField(default=0)
+    may_usage = models.FloatField(default=0)
+    june_limit = models.FloatField(default=0)
+    june_usage = models.FloatField(default=0)
+    q2_limit = models.FloatField(default=0)
+    q2_usage = models.FloatField(default=0)
+    july_limit = models.FloatField(default=0)
+    july_usage = models.FloatField(default=0)
+    august_limit = models.FloatField(default=0)
+    august_usage = models.FloatField(default=0)
+    september_limit = models.FloatField(default=0)
+    september_usage = models.FloatField(default=0)
+    q3_limit = models.FloatField(default=0)
+    q3_usage = models.FloatField(default=0)
+    october_limit = models.FloatField(default=0)
+    october_usage = models.FloatField(default=0)
+    november_limit = models.FloatField(default=0)
+    november_usage = models.FloatField(default=0)
+    december_limit = models.FloatField(default=0)
+    december_usage = models.FloatField(default=0)
+    q4_limit = models.FloatField(default=0)
+    q4_usage = models.FloatField(default=0)
 
     objects = DepartmentCreditLimitManager()
 
     @classmethod
-    def create(cls, department, limit):
-        new_department = cls(department=department, limit=limit)
+    def create(cls, department, total_limit):
+        new_department = cls(department=department, total_limit=total_limit)
         return new_department
 
 

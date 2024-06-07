@@ -66,6 +66,8 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
     userLastName,
     userDepartment,
     calenderDate,
+    currentQuarterUsage,
+    currentQuarterLimit,
     setStatusBankTableData,
     setMyMissingBankData,
   } = useHooks();
@@ -119,6 +121,20 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (
+      currentQuarterUsage + parseFloat(values.billing_amount) >
+      currentQuarterLimit
+    ) {
+      if (values.category == "Meeting with Business Partners") {
+        toast("Over the limit");
+        return;
+      }
+      if (values.category == "Meeting between employees") {
+        toast("Over the limit");
+        return;
+      }
+    }
+
     try {
       const lastDotIndex = values.file[0].name.lastIndexOf(".");
 

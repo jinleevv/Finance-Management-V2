@@ -15,11 +15,11 @@ export function DoughnutChart({
   const data = {
     datasets: [
       {
-        data: [currentBalance, 1000000],
+        data: [currentBalance, remainingBalance],
         backgroundColor: ["#000000", "#ccc"], // Assuming a different color for the remaining amount
       },
     ],
-    labels: [`Spent: $${currentBalance}`, `Remaining: $0`],
+    labels: [`Spent: $${currentBalance}`, `Remaining: $${remainingBalance}`],
   };
 
   return (

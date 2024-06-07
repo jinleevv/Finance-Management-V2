@@ -38,6 +38,7 @@ export function LoginCard() {
     userFirstName,
     userLastName,
     calenderDate,
+    userDepartment,
     setLoggedInUser,
     setStatusBankTableData,
     setUserFirstName,
@@ -45,6 +46,8 @@ export function LoginCard() {
     setUserFullName,
     setUserEmail,
     setUserDepartment,
+    setCurrentQuarterLimit,
+    setCurrentQuarterUsage,
   } = useHooks();
 
   // 1. Define your form.
@@ -84,7 +87,6 @@ export function LoginCard() {
                 .then((res) => {
                   setStatusBankTableData(res.data.data);
                   setInvalidLogin(false);
-                  navigate("/home");
                 });
             })
             .catch(() => {
@@ -94,6 +96,74 @@ export function LoginCard() {
         .catch(() => {
           setInvalidLogin(true);
         });
+
+      await clientI.get("/api/department-credit-balance/").then((res) => {
+        const months: string[] = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        const currentDate = new Date();
+        const currentMonthIndex = currentDate.getMonth();
+        const currentMonthName = months[currentMonthIndex];
+
+        if (
+          currentMonthName === "January" ||
+          currentMonthName === "February" ||
+          currentMonthName === "March"
+        ) {
+          res.data.map((item) => {
+            if (item.department === userDepartment) {
+              setCurrentQuarterLimit(item.q1_limit);
+              setCurrentQuarterUsage(item.q1_usage);
+            }
+          });
+        } else if (
+          currentMonthName === "April" ||
+          currentMonthName === "May" ||
+          currentMonthName === "June"
+        ) {
+          res.data.map((item) => {
+            if (item.department === userDepartment) {
+              setCurrentQuarterLimit(item.q2_limit);
+              setCurrentQuarterUsage(item.q2_usage);
+            }
+          });
+        } else if (
+          currentMonthName === "July" ||
+          currentMonthName === "August" ||
+          currentMonthName === "September"
+        ) {
+          res.data.map((item) => {
+            if (item.department === userDepartment) {
+              setCurrentQuarterLimit(item.q3_limit);
+              setCurrentQuarterUsage(item.q3_usage);
+            }
+          });
+        } else if (
+          currentMonthName === "October" ||
+          currentMonthName === "November" ||
+          currentMonthName === "December"
+        ) {
+          res.data.map((item) => {
+            if (item.department === userDepartment) {
+              setCurrentQuarterLimit(item.q4_limit);
+              setCurrentQuarterUsage(item.q4_usage);
+            }
+          });
+        }
+      });
+      navigate("/home");
     } catch (error) {
       if (error.response.data["reason"] === "Non existing user") {
         setInvalidLogin(true);

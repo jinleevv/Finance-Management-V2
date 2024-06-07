@@ -10,14 +10,18 @@ import { toast } from "sonner";
 export function IntroductionPage() {
   const navigate = useNavigate();
   const {
+    clientI,
     clientII,
     loggedInUser,
+    userDepartment,
     setLoggedInUser,
     setUserFirstName,
     setUserLastName,
     setUserFullName,
     setUserEmail,
     setUserDepartment,
+    setCurrentQuarterLimit,
+    setCurrentQuarterUsage,
   } = useHooks();
 
   useEffect(() => {
@@ -55,11 +59,81 @@ export function IntroductionPage() {
       });
   }, []);
 
-  function handleClick() {
+  async function handleClick() {
     if (!loggedInUser) {
       navigate("/login");
     } else {
-      navigate("/home");
+      const response = await clientII.get("/api/sessionid-exist/");
+
+      if (response.status === 200) {
+        await clientI.get("/api/department-credit-balance/").then((res) => {
+          const months: string[] = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+
+          const currentDate = new Date();
+          const currentMonthIndex = currentDate.getMonth();
+          const currentMonthName = months[currentMonthIndex];
+
+          if (
+            currentMonthName === "January" ||
+            currentMonthName === "February" ||
+            currentMonthName === "March"
+          ) {
+            res.data.map((item) => {
+              if (item.department === userDepartment) {
+                setCurrentQuarterLimit(item.q1_limit);
+                setCurrentQuarterUsage(item.q1_usage);
+              }
+            });
+          } else if (
+            currentMonthName === "April" ||
+            currentMonthName === "May" ||
+            currentMonthName === "June"
+          ) {
+            res.data.map((item) => {
+              if (item.department === userDepartment) {
+                setCurrentQuarterLimit(item.q2_limit);
+                setCurrentQuarterUsage(item.q2_usage);
+              }
+            });
+          } else if (
+            currentMonthName === "July" ||
+            currentMonthName === "August" ||
+            currentMonthName === "September"
+          ) {
+            res.data.map((item) => {
+              if (item.department === userDepartment) {
+                setCurrentQuarterLimit(item.q3_limit);
+                setCurrentQuarterUsage(item.q3_usage);
+              }
+            });
+          } else if (
+            currentMonthName === "October" ||
+            currentMonthName === "November" ||
+            currentMonthName === "December"
+          ) {
+            res.data.map((item) => {
+              if (item.department === userDepartment) {
+                setCurrentQuarterLimit(item.q4_limit);
+                setCurrentQuarterUsage(item.q4_usage);
+              }
+            });
+          }
+        });
+        navigate("/home");
+      }
     }
   }
   return (

@@ -65,7 +65,14 @@ const formSchema = z.object({
 });
 
 export function UploadTransactionsForm() {
-  const { clientI, userFirstName, userLastName, userDepartment } = useHooks();
+  const {
+    clientI,
+    userFirstName,
+    userLastName,
+    userDepartment,
+    currentQuarterLimit,
+    currentQuarterUsage,
+  } = useHooks();
   const [checked, setChecked] = useState(false);
   const [submitValuesElement, setSubmitValuesElement] = useState(<div></div>);
   const today = new Date();
@@ -97,6 +104,19 @@ export function UploadTransactionsForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (
+      currentQuarterUsage + parseFloat(values.billing_amount) >
+      currentQuarterLimit
+    ) {
+      if (values.category == "Meeting with Business Partners") {
+        toast("Over the limit");
+        return;
+      }
+      if (values.category == "Meeting between employees") {
+        toast("Over the limit");
+        return;
+      }
+    }
     try {
       const lastDotIndex = values.file[0].name.lastIndexOf(".");
 

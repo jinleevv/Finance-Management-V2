@@ -8,29 +8,73 @@ import {
 import { Label } from "@/components/ui/label";
 import CountUp from "react-countup";
 import { DoughnutChart } from "@/features/DashBoardComponents/DoughnutChart";
-import { useEffect, useState } from "react";
-import { useHooks } from "@/hooks";
 import { StatusBadge } from "./StatusBadge";
-import { DateRange } from "react-day-picker";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 
-export function CardBalanceInformation() {
-  const {
-    clientI,
-    calenderDate,
-    userFirstName,
-    userLastName,
-    userDepartment,
-    balanceStatus,
-    setBalanceStatus,
-  } = useHooks();
+interface CardBalanceInformationProps {
+  departmentLimit: number;
+  departmentUsage: number;
+  currentQuarter: string;
+  firstMonth: string;
+  secondMonth: string;
+  thirdMonth: string;
+  firstMonthInfo: any;
+  secondMonthInfo: any;
+  thirdMonthInfo: any;
+  quarterInfo: any;
+}
 
-  const [currentBalance, setCurrentBalance] = useState<number>(0);
-  const [remainingBalance, setRemainingBalance] = useState<number>(0);
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: startOfMonth(new Date()),
-    to: endOfMonth(new Date()),
-  });
+export function CardBalanceInformation({
+  departmentLimit,
+  departmentUsage,
+  currentQuarter,
+  firstMonth,
+  secondMonth,
+  thirdMonth,
+  firstMonthInfo,
+  secondMonthInfo,
+  thirdMonthInfo,
+  quarterInfo,
+}: CardBalanceInformationProps) {
+  let firstMonthLimit = 0;
+  let firstMonthUsage = 0;
+  if (firstMonthInfo) {
+    firstMonthLimit = firstMonthInfo.limit;
+    firstMonthUsage = firstMonthInfo.usage;
+  } else {
+    firstMonthLimit = 999;
+    firstMonthUsage = 999;
+  }
+
+  let secondMonthLimit = 0;
+  let secondMonthUsage = 0;
+  if (secondMonthInfo) {
+    secondMonthLimit = secondMonthInfo.limit;
+    secondMonthUsage = secondMonthInfo.usage;
+  } else {
+    secondMonthLimit = 999;
+    secondMonthUsage = 999;
+  }
+
+  let thirdMonthLimit = 0;
+  let thirdMonthUsage = 0;
+  if (thirdMonthInfo) {
+    thirdMonthLimit = thirdMonthInfo.limit;
+    thirdMonthUsage = thirdMonthInfo.usage;
+  } else {
+    thirdMonthLimit = 999;
+    thirdMonthUsage = 999;
+  }
+
+  let quarterLimit = 0;
+  let quarterUsage = 0;
+  if (quarterInfo) {
+    quarterLimit = quarterInfo.limit;
+    quarterUsage = quarterInfo.usage;
+  } else {
+    quarterLimit = 999;
+    quarterUsage = 999;
+  }
 
   function formatAmount(amount: number) {
     const formatter = new Intl.NumberFormat("en-US", {
@@ -42,72 +86,283 @@ export function CardBalanceInformation() {
     return formatter.format(amount);
   }
 
-  useEffect(() => {
-    clientI
-      .post("/api/department-credit-balance/", {
-        date_from: date.from.toISOString().split("T")[0],
-        date_to: date.to.toISOString().split("T")[0],
-      })
-      .then(() => {
-        // clientI.get("/api/department-credit-card-limit/").then((res) => {
-        //   res.data.map((item) => {
-        //     if (item.department === userDepartment) {
-        //       setCurrentBalance(item.usage);
-        //       setRemainingBalance(item.limit - item.usage);
-        //       // if (currentBalance >= item.limit - item.usage) {
-        //       //   setBalanceStatus("Bad");
-        //       // } else {
-        //       //   setBalanceStatus("Good");
-        //       // }
-        //     }
-        //   });
-        // });
-        clientI
-          .post("/api/user-credit-card-limit/", {
-            date_from: calenderDate.from.toISOString().split("T")[0],
-            date_to: calenderDate.to.toISOString().split("T")[0],
-            first_name: userFirstName,
-            last_name: userLastName,
-          })
-          .then((res) => {
-            setCurrentBalance(res.data.total_billing_amount);
-          });
-      })
-      .catch((err) => {});
-  }, []);
-
   return (
     <Card className="lg:flex mt-2 w-full shadow-lg">
       <CardHeader>
-        <div className="h-40 w-40">
+        <div className="h-40 w-40 lg:mt-14 lg:ml-0 ml-16">
           <DoughnutChart
-            currentBalance={currentBalance}
-            remainingBalance={remainingBalance}
+            currentBalance={departmentUsage}
+            remainingBalance={departmentLimit}
           />
         </div>
       </CardHeader>
-      <CardContent className="w-full mt-6 ">
+      <CardContent className="w-full mt-6">
         <div className="w-full">
           <CardTitle className="text-2xl">Current Balance</CardTitle>
           <CardDescription>
-            Corporate Credit Card Limit: Currently Testing
+            Corporate Credit Card Department Limit:{" "}
+            {formatAmount(departmentLimit)}
           </CardDescription>
         </div>
-        <div className="flex w-full mt-5 space-x-5">
-          <Label className="lg:flex grid text-md font-bold space-x-1">
-            <span>Current Balance:</span>
-            <CountUp
-              decimals={2}
-              decimal="."
-              prefix="$"
-              end={currentBalance}
-              duration={1}
-            />
-          </Label>
-          <Label className="lg:flex grid text-md font-bold space-x-1">
-            <span>Remaining Balance:</span>
-            {/* <CountUp decimals={2} decimal="." prefix="$" end={0} duration={1} /> */}
-          </Label>
+        <div className="lg:flex w-full mt-5 lg:gap-7">
+          <div className="h-18 border rounded-xl p-6">
+            <div className="lg:flex lg:gap-12 lg:space-y-0 space-y-3">
+              <div>
+                <Label className="flex w-full text-md font-bold space-x-1 justify-center">
+                  {firstMonth}
+                </Label>
+                <div className="flex w-full mt-3 -ml-1 gap-8 justify-center">
+                  <Label className="text-xs font-bold">Spent</Label>
+                  <Label className="text-xs font-bold">Limit</Label>
+                  <Label className="text-xs font-bold">Diff</Label>
+                </div>
+                <div className="flex w-full justify-center ml-2">
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={firstMonthUsage}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={firstMonthLimit}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  {firstMonthLimit - firstMonthUsage < 0 ? (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-red-600">
+                          <GoTriangleUp />
+                        </Label>
+                        <Label className="text-md font-normal text-red-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={firstMonthLimit - firstMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-green-600">
+                          <GoTriangleDown />
+                        </Label>
+                        <Label className="text-md font-normal text-green-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={firstMonthLimit - firstMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label className="flex w-full text-md font-bold space-x-1 justify-center">
+                  {secondMonth}
+                </Label>
+                <div className="flex w-full mt-3 -ml-1 gap-8 justify-center">
+                  <Label className="text-xs font-bold">Spent</Label>
+                  <Label className="text-xs font-bold">Limit</Label>
+                  <Label className="text-xs font-bold">Diff</Label>
+                </div>
+                <div className="flex w-full justify-center ml-2">
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={secondMonthUsage}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={secondMonthLimit}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  {secondMonthLimit - secondMonthUsage < 0 ? (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-red-600">
+                          <GoTriangleUp />
+                        </Label>
+                        <Label className="text-md font-normal text-red-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={secondMonthLimit - secondMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-green-600">
+                          <GoTriangleDown />
+                        </Label>
+                        <Label className="text-md font-normal text-green-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={secondMonthLimit - secondMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="lg:flex lg:gap-10 mt-3 lg:pr-7 lg:space-y-0 space-y-3">
+              <div>
+                <Label className="flex w-full text-md font-bold space-x-1 justify-center">
+                  {thirdMonth}
+                </Label>
+                <div className="flex w-full mt-3 -ml-1 gap-8 justify-center">
+                  <Label className="text-xs font-bold">Spent</Label>
+                  <Label className="text-xs font-bold">Limit</Label>
+                  <Label className="text-xs font-bold">Diff</Label>
+                </div>
+                <div className="flex w-full justify-center ml-2.5">
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={thirdMonthUsage}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={thirdMonthLimit}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  {thirdMonthLimit - thirdMonthUsage < 0 ? (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-red-600">
+                          <GoTriangleUp />
+                        </Label>
+                        <Label className="text-md font-normal text-red-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={thirdMonthLimit - thirdMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-green-600">
+                          <GoTriangleDown />
+                        </Label>
+                        <Label className="text-md font-normal text-green-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={thirdMonthLimit - thirdMonthUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Label className="flex w-full text-md font-bold space-x-1 justify-center">
+                  {currentQuarter} Total
+                </Label>
+                <div className="flex w-full mt-3 -ml-1 gap-8 justify-center">
+                  <Label className="text-xs font-bold">Spent</Label>
+                  <Label className="text-xs font-bold">Limit</Label>
+                  <Label className="text-xs font-bold">Diff</Label>
+                </div>
+                <div className="flex w-full justify-center ml-2.5">
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={quarterUsage}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  <CountUp
+                    decimals={2}
+                    decimal="."
+                    prefix="$"
+                    end={quarterLimit}
+                    duration={0.3}
+                  />
+                  <div className="h-5 w-0.5 ml-2 mr-2 mt-0.5 border border-black"></div>
+                  {quarterLimit - quarterUsage < 0 ? (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-red-600">
+                          <GoTriangleUp />
+                        </Label>
+                        <Label className="text-md font-normal text-red-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={quarterLimit - quarterUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex">
+                        <Label className="mt-1 text-green-600">
+                          <GoTriangleDown />
+                        </Label>
+                        <Label className="text-md font-normal text-green-600">
+                          <CountUp
+                            decimals={2}
+                            decimal="."
+                            prefix="$"
+                            end={quarterLimit - quarterUsage}
+                            duration={0.3}
+                          />
+                        </Label>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="mt-5">
           <Label className="flex text-md font-bold">
