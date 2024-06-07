@@ -201,7 +201,7 @@ export function DashBoard() {
           quarterInfo={quarterInfo}
         />
       </div>
-      <div className="lg:h-[310px] h-[350px] ml-10 mt-12 mr-10">
+      <div className="lg:h-[305px] h-[340px] ml-10 mt-12 mr-10">
         <div className="flex justify-between">
           <Label className="text-2xl">Recent transactions</Label>
           <Button variant="outline" onClick={handleViewAll}>

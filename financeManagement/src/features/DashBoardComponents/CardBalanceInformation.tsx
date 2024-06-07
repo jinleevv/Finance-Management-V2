@@ -234,7 +234,7 @@ export function CardBalanceInformation({
                 </div>
               </div>
             </div>
-            <div className="lg:flex lg:gap-10 mt-3 lg:pr-7 lg:space-y-0 space-y-3">
+            <div className="lg:flex lg:gap-3 mt-3 lg:pr-7 lg:space-y-0 space-y-3">
               <div>
                 <Label className="flex w-full text-md font-bold space-x-1 justify-center">
                   {thirdMonth}
