@@ -100,22 +100,116 @@ class CardTransactionUpload(APIView):
     authentication_classes = ()
     def post(self, request):
         data = request.data
+
         try:
+            month = data['date'][5:7]
+
+            if data['category'] == "Meeting with Business Partners" or data['category'] == "Meeting between employees":
+                departmentCreditLimitSet = DepartmentCreditLimit.objects.get(department=data['department'])
+
+                if month == "01":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.january_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q1_usage += float(data['billing_amount'])
+                elif month == "02":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.february_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q1_usage += float(data['billing_amount'])
+                elif month == "03":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.march_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q1_usage += float(data['billing_amount'])
+                elif month == "04":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.april_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q2_usage += float(data['billing_amount'])
+                elif month == "05":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.may_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q2_usage += float(data['billing_amount'])
+                elif month == "06":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.june_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q2_usage += float(data['billing_amount'])
+                elif month == "07":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.july_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q3_usage += float(data['billing_amount'])
+                elif month == "08":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.august_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q3_usage += float(data['billing_amount'])
+                elif month == "09":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.september_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q3_usage += float(data['billing_amount'])
+                elif month == "10":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.october_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q4_usage += float(data['billing_amount'])
+                elif month == "11":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.november_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q4_usage += float(data['billing_amount'])
+                elif month == "12":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(data['billing_amount'])
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", data['first_name'].upper())
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.december_usage += float(data['billing_amount'])
+                    departmentCreditLimitSet.q4_usage += float(data['billing_amount'])
+                
+                departmentCreditLimitSet.save()
+
             TaxTransactionForm.objects.create_transaction(
-                trans_date=data['date'],
-                billing_amount=float(data['billing_amount']),
-                tps=float(data['tps']),
-                tvq=float(data['tvq']),
-                merchant_name=data['merchant_name'],
-                category=data['category'],
-                purpose=data['purpose'],
-                first_name=data['first_name'].upper(),
-                last_name=data['last_name'].upper(),
-                img=data['file'],
-                project=data['project'],
-                attendees=data['attendees'],
-                department=data['department'],
-            )
+                    trans_date=data['date'],
+                    billing_amount=float(data['billing_amount']),
+                    tps=float(data['tps']),
+                    tvq=float(data['tvq']),
+                    merchant_name=data['merchant_name'],
+                    category=data['category'],
+                    purpose=data['purpose'],
+                    first_name=data['first_name'].upper(),
+                    last_name=data['last_name'].upper(),
+                    img=data['file'],
+                    project=data['project'],
+                    attendees=data['attendees'],
+                    department=data['department'],
+                )
+            
             return Response({'message': 'Transaction created successfully'})
 
         except Exception as e:
@@ -181,9 +275,9 @@ class DownloadTransactions(APIView):
         department_info = AppUser.objects.all().values_list('first_name', 'last_name', 'department')
         department_info_names = list(department_info)
 
-        constructions = ['Procurement', 'Contruction Operation']
-        construction_options = ['12395202-1 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses']
-        general_options = ['52202101 Travel(Meal)','52202101 Travel', '52212102 Selling and administrative expenses_entertainment expenses_employees', '52201123 Selling and administrative expenses, welfare expenses, supporting discussion', '52224102 Selling and administrative expenses_conference expenses_employees', '52216111 Bank charges', '52221199 Car expenses']
+        constructions = ['Procurement', 'Construction Director' 'Contruction Operation', 'Construction', 'Production & Safety', 'Quality & Technology', 'Maintenance']
+        construction_options = ['12395202-1 Construction in progress_travel(Meal)', '12395202 Construction in progress_travel expenses', '12395213 Construction in progress_entertainment expenses', '12395201-1 Construction in progress_welfare expenses_Supporting Discussion', '12395224 Construction in progress_conference expenses', '52216111 Bank charges', '12395221 Construction in progress_vehicles expenses', '52218101 Office/General Administrative Expenses']
+        general_options = ['52202101 Travel(Meal)','52202101 Travel', '52212102 Selling and administrative expenses_entertainment expenses_employees', '52201123 Selling and administrative expenses, welfare expenses, supporting discussion', '52224102 Selling and administrative expenses_conference expenses_employees', '52216111 Bank charges', '52221199 Car expenses', '52218101 Office/General Administrative Expenses']
         
         try:
             return_data = []
@@ -302,6 +396,8 @@ class DownloadTransactions(APIView):
                         account = construction_options[5]
                     elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
                         account = construction_options[6]
+                    elif match_item.category == 'Office Supplies':
+                        account = construction_options[7]
                     else:
                         account = ""
                 else:
@@ -321,6 +417,8 @@ class DownloadTransactions(APIView):
                         account = general_options[5]
                     elif match_item.category == 'Car Expenses (Gas, Maintenance, Parking, Toll)':
                         account = general_options[6]
+                    elif match_item.category == 'Office Supplies':
+                        account = construction_options[7]
                     else:
                         account = ""
                         
@@ -392,6 +490,9 @@ class DeleteCardTransactions(APIView):
     def post(self, request):
         try:
             data = request.data
+
+            department = data['userDepartment']
+            data = data['rowsData']
             
             for i in range(len(data)):
                 trans_date = data[i]['original']['trans_date']
@@ -404,6 +505,50 @@ class DeleteCardTransactions(APIView):
 
                 rows = TaxTransactionForm.objects.filter(trans_date=trans_date, billing_amount=billing_amount, merchant_name=merchant_name, category=category, purpose=purpose, first_name=first_name, last_name=last_name)
                 
+                month = trans_date[5:7]
+
+                if category == "Meeting with Business Partners" or category == "Meeting between employees":
+                    departmentCreditLimitSet = DepartmentCreditLimit.objects.get(department=department)
+                    
+                    if month == "01":
+                        departmentCreditLimitSet.january_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q1_usage -= float(billing_amount)
+                    elif month == "02":
+                        departmentCreditLimitSet.february_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q1_usage -= float(billing_amount)
+                    elif month == "03":
+                        departmentCreditLimitSet.march_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q1_usage -= float(billing_amount)
+                    elif month == "04":
+                        departmentCreditLimitSet.april_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q2_usage -= float(billing_amount)
+                    elif month == "05":
+                        departmentCreditLimitSet.may_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q2_usage -= float(billing_amount)
+                    elif month == "06":
+                        departmentCreditLimitSet.june_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q2_usage -= float(billing_amount)
+                    elif month == "07":
+                        departmentCreditLimitSet.july_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q3_usage -= float(billing_amount)
+                    elif month == "08":
+                        departmentCreditLimitSet.august_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q3_usage -= float(billing_amount)
+                    elif month == "09":
+                        departmentCreditLimitSet.september_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q3_usage -= float(billing_amount)
+                    elif month == "10":
+                        departmentCreditLimitSet.october_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q4_usage -= float(billing_amount)
+                    elif month == "11":
+                        departmentCreditLimitSet.november_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q4_usage -= float(billing_amount)
+                    elif month == "12":
+                        departmentCreditLimitSet.december_usage -= float(billing_amount)
+                        departmentCreditLimitSet.q4_usage -= float(billing_amount)
+                    
+                    departmentCreditLimitSet.save()
+
                 file_path = 'media/' + rows.values()[0]['img']
                 if os.path.exists(file_path):
                     os.remove('media/' + rows.values()[0]['img'])
@@ -414,6 +559,7 @@ class DeleteCardTransactions(APIView):
             return Response({'message': "Successfully deleted provided data" }, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print(e)
             return Response({ "message": f"error: {e}" }, status=status.HTTP_400_BAD_REQUEST)
 
 class DeleteBankTransactions(APIView):
@@ -685,6 +831,98 @@ class EditTransactionInformation(APIView):
             new_purpose = edit_data.get('purpose')
             new_attendees = edit_data.get('attendees')
 
+            month = edit_data.get('trans_date')[5:7]
+
+            if new_category == "Meeting with Business Partners" or new_category == "Meeting between employees":
+                departmentCreditLimitSet = DepartmentCreditLimit.objects.get(department=data['department'])
+
+                if month == "01":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.january_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q1_usage += float(new_billing_amount)
+                elif month == "02":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.february_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q1_usage += float(new_billing_amount)
+                elif month == "03":
+                    checkOverUsage =  departmentCreditLimitSet.q1_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q1_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.march_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q1_usage += float(new_billing_amount)
+                elif month == "04":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.april_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q2_usage += float(new_billing_amount)
+                elif month == "05":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.may_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q2_usage += float(new_billing_amount)
+                elif month == "06":
+                    checkOverUsage =  departmentCreditLimitSet.q2_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q2_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.june_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q2_usage += float(new_billing_amount)
+                elif month == "07":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.july_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q3_usage += float(new_billing_amount)
+                elif month == "08":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.august_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q3_usage += float(new_billing_amount)
+                elif month == "09":
+                    checkOverUsage =  departmentCreditLimitSet.q3_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q3_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.september_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q3_usage += float(new_billing_amount)
+                elif month == "10":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.october_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q4_usage += float(new_billing_amount)
+                elif month == "11":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.november_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q4_usage += float(new_billing_amount)
+                elif month == "12":
+                    checkOverUsage =  departmentCreditLimitSet.q4_usage + float(new_billing_amount)
+                    if departmentCreditLimitSet.q4_limit < checkOverUsage:
+                        print("Over Used for ", original_first_name)
+                        return Response({'message': 'Over used'})
+                    departmentCreditLimitSet.december_usage += float(new_billing_amount)
+                    departmentCreditLimitSet.q4_usage += float(new_billing_amount)
+                
+                departmentCreditLimitSet.save()
+
             modify_data = TaxTransactionForm.objects.get(trans_date=original_trans_date, billing_amount=original_billing_amount, merchant_name=original_merchant_name,
                                                         tps=original_tps, tvq=original_tvq, first_name=original_first_name.upper(), last_name=original_last_name.upper())
 
@@ -883,21 +1121,6 @@ class DepartmentCreditCardBalance(APIView):
 
         # Return the serialized data as JSON
         return JsonResponse(return_value, safe=False)
-    def post(self, request):
-        data = request.data
-        date_from = data.get('date_from')
-        date_to = data.get('date_to')
-
-        total_billing_amounts = TaxTransactionForm.objects.filter(trans_date__range=(date_from, date_to)).values('department').annotate(total_billing_amount=Sum('billing_amount'))
-        
-        return_value = {}
-        for entry in total_billing_amounts:
-            return_value[entry['department']] = entry['total_billing_amount']
-            update_department = DepartmentCreditLimit.objects.get(department=entry['department'])
-            update_department.total_usage = entry['total_billing_amount']
-            update_department.save()
-
-        return JsonResponse(return_value, safe=False)
 
 class DepartmentCreditCardLimit(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -920,13 +1143,19 @@ class DepartmentCreditCardLimit(APIView):
             if data_year != current_year:
                 continue
             month = calendar.month_name[int(entry['month'])]
-            if entry['category'] != "Meeting between employees" and entry['category'] != "Meeting with Business Partners":
+            
+            if entry['department'] == "":
                 continue
-            try:
-                result[entry['department']][month] = entry['total_billing_amount']
-            except KeyError:
-                result[entry['department']] = {}
-                result[entry['department']][month] = entry['total_billing_amount']
+            if entry['category'] == "Meeting between employees" or entry['category'] == "Meeting with Business Partners":
+                try:
+                    try:
+                        exist_month = result[entry['department']][month]
+                    except Exception as e:
+                        result[entry['department']][month] = 0
+                    result[entry['department']][month] += entry['total_billing_amount']
+                except KeyError:
+                    result[entry['department']] = {}
+                    result[entry['department']][month] = entry['total_billing_amount']
 
         for department in result:
             department_limit = DepartmentCreditLimit.objects.get(department=department)

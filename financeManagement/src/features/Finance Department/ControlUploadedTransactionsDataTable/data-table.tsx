@@ -59,6 +59,7 @@ export function ControlUploadedTransactionsDataTable<TData, TValue>({
     calenderDate,
     userFirstName,
     userLastName,
+    userDepartment,
     setCalenderDate,
     setEntireUserUploadedTransactions,
   } = useHooks();
@@ -103,7 +104,10 @@ export function ControlUploadedTransactionsDataTable<TData, TValue>({
   }
 
   async function handleDelete() {
-    const data = table.getFilteredSelectedRowModel().rows;
+    const data = {
+      rowsData: table.getFilteredSelectedRowModel().rows,
+      userDepartment: userDepartment,
+    };
 
     await clientI
       .post("/api/delete-card-data/", data, {

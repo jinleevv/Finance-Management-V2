@@ -63,6 +63,7 @@ export function MyDataTable<TData1, TData2, TValue>({
     clientI,
     userFirstName,
     userLastName,
+    userDepartment,
     calenderDate,
     transactionHistoryTab,
     setStatusBankTableData,
@@ -145,7 +146,10 @@ export function MyDataTable<TData1, TData2, TValue>({
   }
 
   async function handleDelete() {
-    const data = table.getFilteredSelectedRowModel().rows;
+    const data = {
+      rowsData: table.getFilteredSelectedRowModel().rows,
+      userDepartment: userDepartment,
+    };
 
     await clientI
       .post("/api/delete-card-data/", data, {

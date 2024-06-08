@@ -57,6 +57,7 @@ export function MyMissingUploadedData<TData, TValue>({
     calenderDate,
     userFirstName,
     userLastName,
+    userDepartment,
     setMyMissingUploadedData,
   } = useHooks();
 
@@ -73,7 +74,10 @@ export function MyMissingUploadedData<TData, TValue>({
   }
 
   async function handleDelete() {
-    const data = table.getFilteredSelectedRowModel().rows;
+    const data = {
+      rowsData: table.getFilteredSelectedRowModel().rows,
+      userDepartment: userDepartment,
+    };
 
     await clientI
       .post("/api/delete-card-data/", data, {

@@ -69,8 +69,7 @@ export function EditTransactionInformation({
     calenderDate,
     userFirstName,
     userLastName,
-    currentQuarterUsage,
-    currentQuarterLimit,
+    userDepartment,
     setMyMissingUploadedData,
     setMyTableData,
     setMyMissingBankData,
@@ -116,20 +115,6 @@ export function EditTransactionInformation({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (
-      currentQuarterUsage + parseFloat(values.billing_amount) >
-      currentQuarterLimit
-    ) {
-      if (values.category == "Meeting with Business Partners") {
-        toast("Over the limit");
-        return;
-      }
-      if (values.category == "Meeting between employees") {
-        toast("Over the limit");
-        return;
-      }
-    }
-
     const editData = {
       trans_date: values.date.toISOString().split("T")[0],
       billing_amount: values.billing_amount,
@@ -145,14 +130,22 @@ export function EditTransactionInformation({
     await clientI
       .post(
         "/api/edit-transaction-information/",
-        { original: data[0].original, edit: editData },
+        {
+          original: data[0].original,
+          edit: editData,
+          department: userDepartment,
+        },
         {
           headers: { "Content-Type": "application/json" },
         }
       )
       .then((res) => {
-        setMyTableData(res.data);
-        setEntireUserUploadedTransactions(res.data);
+        if (res.data.message === "Over used") {
+          toast("Transaction upload failed: Over the limit");
+        } else {
+          setMyTableData(res.data);
+          setEntireUserUploadedTransactions(res.data);
+        }
       })
       .catch(() => {
         toast("Failed to edit the selected item");

@@ -104,19 +104,6 @@ export function UploadTransactionsForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (
-      currentQuarterUsage + parseFloat(values.billing_amount) >
-      currentQuarterLimit
-    ) {
-      if (values.category == "Meeting with Business Partners") {
-        toast("Over the limit");
-        return;
-      }
-      if (values.category == "Meeting between employees") {
-        toast("Over the limit");
-        return;
-      }
-    }
     try {
       const lastDotIndex = values.file[0].name.lastIndexOf(".");
 
@@ -163,22 +150,28 @@ export function UploadTransactionsForm() {
         .post("/api/card-transaction-upload/", data, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then(() => {
-          form.reset({
-            category: "",
-            billing_amount: "",
-            tps: "",
-            tvq: "",
-            merchant_name: "",
-            file: null,
-            project: "",
-            purpose: "",
-            attendees: "",
-          });
+        .then((res) => {
+          if (res.data.message === "Over used") {
+            toast("Transaction upload failed: Over the limit", {
+              description: today.toISOString(),
+            });
+          } else {
+            form.reset({
+              category: "",
+              billing_amount: "",
+              tps: "",
+              tvq: "",
+              merchant_name: "",
+              file: null,
+              project: "",
+              purpose: "",
+              attendees: "",
+            });
 
-          toast("Transaction history has been Updated", {
-            description: today.toISOString(),
-          });
+            toast("Transaction history has been Updated", {
+              description: today.toISOString(),
+            });
+          }
         })
         .catch(() => toast.error("Updating the transaction history failed"));
     } catch (error) {

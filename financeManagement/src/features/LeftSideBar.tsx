@@ -37,8 +37,8 @@ export function LeftSideBar({ width }: LeftSideBarProps) {
   const navigate = useNavigate();
   const style = `sticky left-0 top-0 flex h-screen ${width} flex-col justify-between border-r border-gray-200 pt-8 max-md:hidden`;
 
-  function handleHomeNavigate() {
-    clientI.get("/api/department-credit-balance/").then((res) => {
+  async function handleHomeNavigate() {
+    await clientI.get("/api/department-credit-balance/").then((res) => {
       const months: string[] = [
         "January",
         "February",

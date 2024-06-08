@@ -986,8 +986,20 @@ export function DepartmentCreditLimit() {
                           <SelectItem value="Procurement">
                             Procurement
                           </SelectItem>
-                          <SelectItem value="Contruction Operation">
-                            Contruction Operation
+                          <SelectItem value="Construction Director">
+                            Construction Director
+                          </SelectItem>
+                          <SelectItem value="Construction">
+                            Construction
+                          </SelectItem>
+                          <SelectItem value="Production & Safety">
+                            Production & Safety
+                          </SelectItem>
+                          <SelectItem value="Quality & Technology">
+                            Quality & Technology
+                          </SelectItem>
+                          <SelectItem value="Maintenance">
+                            Maintenance
                           </SelectItem>
                           <SelectItem value="President">President</SelectItem>
                           <SelectItem value="IT Security">

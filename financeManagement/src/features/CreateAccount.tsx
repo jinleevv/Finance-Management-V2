@@ -176,8 +176,17 @@ export function CreateAccount() {
                               <DropdownMenuRadioItem value="Procurement">
                                 Procurement
                               </DropdownMenuRadioItem>
-                              <DropdownMenuRadioItem value="Contruction Operation">
-                                Contruction Operation
+                              <DropdownMenuRadioItem value="Construction">
+                                Construction
+                              </DropdownMenuRadioItem>
+                              <DropdownMenuRadioItem value="Production & Safety">
+                                Production & Safety
+                              </DropdownMenuRadioItem>
+                              <DropdownMenuRadioItem value="Quality & Technology">
+                                Quality & Technology
+                              </DropdownMenuRadioItem>
+                              <DropdownMenuRadioItem value="Maintenance">
+                                Maintenance
                               </DropdownMenuRadioItem>
                               <DropdownMenuRadioItem value="President">
                                 President

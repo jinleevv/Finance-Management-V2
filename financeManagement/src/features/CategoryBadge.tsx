@@ -121,20 +121,6 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (
-      currentQuarterUsage + parseFloat(values.billing_amount) >
-      currentQuarterLimit
-    ) {
-      if (values.category == "Meeting with Business Partners") {
-        toast("Over the limit");
-        return;
-      }
-      if (values.category == "Meeting between employees") {
-        toast("Over the limit");
-        return;
-      }
-    }
-
     try {
       const lastDotIndex = values.file[0].name.lastIndexOf(".");
 
@@ -181,10 +167,14 @@ export function CategoryBadge({ category, rowData }: CategoryBadgeProps) {
         .post("/api/card-transaction-upload/", data, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then(() => {
-          toast("Transaction history has been Updated", {
-            description: new Date().toISOString(),
-          });
+        .then((res) => {
+          if (res.data.message === "Over used") {
+            toast("Transaction upload failed: Over the limit");
+          } else {
+            toast("Transaction history has been Updated", {
+              description: new Date().toISOString(),
+            });
+          }
         })
         .catch(() => toast.error("Updating the transaction history failed"));
     } catch (error) {
