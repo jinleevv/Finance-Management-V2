@@ -106,9 +106,8 @@ export function ControlUploadedTransactionsDataTable<TData, TValue>({
   async function handleDelete() {
     const data = {
       rowsData: table.getFilteredSelectedRowModel().rows,
-      userDepartment: userDepartment,
     };
-
+    
     await clientI
       .post("/api/delete-card-data/", data, {
         headers: { "Content-Type": "application/json" },
@@ -194,7 +193,7 @@ export function ControlUploadedTransactionsDataTable<TData, TValue>({
   return (
     <>
       <div className="flex w-full gap-1 mt-8 mb-4 lg:justify-between justify-center">
-        <div className="w-1/3">
+        <div className="w-1/3 ml-2">
           <Input
             placeholder="Filter by first name..."
             value={

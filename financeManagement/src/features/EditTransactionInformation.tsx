@@ -59,6 +59,7 @@ const formSchema = z.object({
   purpose: z.string().min(1, { message: "It is required" }),
   project: z.string().min(1, { message: "It is required" }),
   attendees: z.string().min(1, { message: "It is required" }),
+  department: z.string(),
 });
 
 export function EditTransactionInformation({
@@ -82,11 +83,13 @@ export function EditTransactionInformation({
 
   function handleStartEdit() {
     const formData = data[0];
+
     const originalDate = new Date(
       formData.original["trans_date"] + "T00:00:00"
     );
     form.setValue("date", originalDate);
     form.setValue("category", formData.original["category"]);
+    form.setValue("department", formData.original["department"]);
     form.setValue(
       "billing_amount",
       formData.original["billing_amount"].toString()
@@ -134,6 +137,7 @@ export function EditTransactionInformation({
           original: data[0].original,
           edit: editData,
           department: userDepartment,
+          new_department: values.department,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -299,6 +303,73 @@ export function EditTransactionInformation({
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <Label htmlFor="merchant_name">Department</Label>
+                    <FormField
+                      control={form.control}
+                      name="department"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild className="w-full">
+                                <Button variant="outline">
+                                  {field.value ? (
+                                    field.value
+                                  ) : (
+                                    <span>Department</span>
+                                  )}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-full">
+                                <DropdownMenuLabel>
+                                  Department
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                  className="w-full"
+                                >
+                                  <DropdownMenuRadioItem value="Procurement">
+                                    Procurement
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Construction">
+                                    Construction
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Production & Safety">
+                                    Production & Safety
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Quality & Technology">
+                                    Quality & Technology
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Maintenance">
+                                    Maintenance
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="President">
+                                    President
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="IT Security">
+                                    IT Security
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Finance">
+                                    Finance
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="HR General Affairs">
+                                    HR General Affairs
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Marketing">
+                                    Marketing
+                                  </DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />

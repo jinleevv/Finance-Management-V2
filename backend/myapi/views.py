@@ -491,7 +491,6 @@ class DeleteCardTransactions(APIView):
         try:
             data = request.data
 
-            department = data['userDepartment']
             data = data['rowsData']
             
             for i in range(len(data)):
@@ -502,6 +501,7 @@ class DeleteCardTransactions(APIView):
                 purpose = data[i]['original']['purpose']
                 first_name = data[i]['original']['first_name']
                 last_name = data[i]['original']['last_name']
+                department = data[i]['original']['department']
 
                 rows = TaxTransactionForm.objects.filter(trans_date=trans_date, billing_amount=billing_amount, merchant_name=merchant_name, category=category, purpose=purpose, first_name=first_name, last_name=last_name)
                 
@@ -811,6 +811,8 @@ class EditTransactionInformation(APIView):
             
             original_data = data['original']
 
+            new_department = data['new_department']
+
             original_trans_date = datetime.strptime(original_data.get('trans_date'), "%Y-%m-%d")
             original_billing_amount = original_data.get('billing_amount')
             original_merchant_name = original_data.get('merchant_name')
@@ -935,6 +937,7 @@ class EditTransactionInformation(APIView):
             modify_data.project = new_project
             modify_data.purpose = new_purpose
             modify_data.attendees = new_attendees
+            modify_data.department = new_department
 
             modify_data.save()
 
@@ -1351,4 +1354,3 @@ class UserCreditCardLimit(APIView):
         
         # Return or process the total_billing_amount as needed
         return JsonResponse({'total_billing_amount': total_billing_amount})
-

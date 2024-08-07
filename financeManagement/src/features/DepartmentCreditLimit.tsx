@@ -24,7 +24,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { Checkbox } from "@/components/ui/checkbox";
 
 const FormSchema = z.object({
   department: z.string().min(1, "Please provide a limit"),
