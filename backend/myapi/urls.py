@@ -30,4 +30,5 @@ urlpatterns = [
     path('department-credit-balance/', views.DepartmentCreditCardBalance.as_view(), name='department-credit-balance'),
     path('department-credit-card-limit/', views.DepartmentCreditCardLimit.as_view(), name='department-credit-card-limit'),
     path('user-credit-card-limit/', views.UserCreditCardLimit.as_view(), name='user-credit-card-limit'),
+    path('convert-contruction-department/', views.ConvertContruction.as_view(), name='convert-contruction-department'),
 ]

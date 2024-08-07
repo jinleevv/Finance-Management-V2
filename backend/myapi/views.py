@@ -1354,3 +1354,15 @@ class UserCreditCardLimit(APIView):
         
         # Return or process the total_billing_amount as needed
         return JsonResponse({'total_billing_amount': total_billing_amount})
+    
+class ConvertContruction(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)  
+    def get(self, request):
+        contruction_data = TaxTransactionForm.objects.filter(department='Contruction Operation')
+
+        for data in contruction_data:
+            data.department = 'Construction'
+            data.save()
+
+        return Response(status=status.HTTP_200_OK)

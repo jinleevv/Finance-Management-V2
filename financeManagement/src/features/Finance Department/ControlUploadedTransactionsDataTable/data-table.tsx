@@ -59,7 +59,6 @@ export function ControlUploadedTransactionsDataTable<TData, TValue>({
     calenderDate,
     userFirstName,
     userLastName,
-    userDepartment,
     setCalenderDate,
     setEntireUserUploadedTransactions,
   } = useHooks();
