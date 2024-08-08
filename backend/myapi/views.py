@@ -305,6 +305,7 @@ class DownloadTransactions(APIView):
                     'Project': "",
                     'Attendees:': "",
                     'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                    'Department': "",
                     'Matched': False,
                     }
                 
@@ -340,6 +341,7 @@ class DownloadTransactions(APIView):
                             'Project': "",
                             'Attendees:': "",
                             'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                            'Department': "",
                             'Matched': False,
                             }
                             return_data.append(item_dict)
@@ -364,6 +366,7 @@ class DownloadTransactions(APIView):
                     'Project': "",
                     'Attendees:': "",
                     'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                    'Department': "",
                     'Matched': False,
                     }
                 
@@ -436,6 +439,7 @@ class DownloadTransactions(APIView):
                     'Project': match_item.project,
                     'Attendees:': match_item.attendees,
                     'Full Name': item.first_name.upper() + " " + item.last_name.upper(),
+                    'Department': match_item.department,
                     'Matched': True,
                 }
                 
