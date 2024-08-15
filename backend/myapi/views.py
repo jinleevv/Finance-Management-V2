@@ -512,7 +512,10 @@ class DeleteCardTransactions(APIView):
                 month = trans_date[5:7]
 
                 if category == "Meeting with Business Partners" or category == "Meeting between employees":
-                    departmentCreditLimitSet = DepartmentCreditLimit.objects.get(department=department)
+                    try:    
+                        departmentCreditLimitSet = DepartmentCreditLimit.objects.get(department=department)
+                    except Exception as e:
+                        departmentCreditLimitSet = DepartmentCreditLimit.objects.create(department=department, total_limit=1000)
                     
                     if month == "01":
                         departmentCreditLimitSet.january_usage -= float(billing_amount)
@@ -1165,7 +1168,10 @@ class DepartmentCreditCardLimit(APIView):
                     result[entry['department']][month] = entry['total_billing_amount']
 
         for department in result:
-            department_limit = DepartmentCreditLimit.objects.get(department=department)
+            try:    
+                department_limit = DepartmentCreditLimit.objects.get(department=department)
+            except Exception as e:
+                department_limit = DepartmentCreditLimit.objects.create(department=department, total_limit=1000)
 
             for update_month in result[department]:
                 if update_month == "January":

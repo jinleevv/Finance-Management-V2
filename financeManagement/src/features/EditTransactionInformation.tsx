@@ -308,7 +308,7 @@ export function EditTransactionInformation({
                     />
                   </div>
                   <div className="w-1/2">
-                    <Label htmlFor="merchant_name">Department</Label>
+                    <Label htmlFor="department">Department</Label>
                     <FormField
                       control={form.control}
                       name="department"
@@ -364,6 +364,9 @@ export function EditTransactionInformation({
                                   </DropdownMenuRadioItem>
                                   <DropdownMenuRadioItem value="Marketing">
                                     Marketing
+                                  </DropdownMenuRadioItem>
+                                  <DropdownMenuRadioItem value="Compliance">
+                                    Compliance
                                   </DropdownMenuRadioItem>
                                 </DropdownMenuRadioGroup>
                               </DropdownMenuContent>

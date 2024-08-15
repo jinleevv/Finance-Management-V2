@@ -237,7 +237,7 @@ export function DepartmentCreditLimit() {
               <div className="w-full border-t mt-2"></div>
               <div className="flex w-full mt-5 space-y-7">
                 <Label className="font-bold text-lg">Usage:</Label>
-                <div className="flex ml-28 w-full">
+                <div className="flex ml-32 w-full">
                   <div className="flex w-full">
                     <Label className="font-bold">January </Label>
                   </div>
@@ -264,7 +264,7 @@ export function DepartmentCreditLimit() {
                       <Label className="font-bold w-44 overflow-auto mr-2">
                         {item.department}
                       </Label>
-                      <div className="flex w-full">
+                      <div className="flex ml-6 w-full">
                         <div className="flex -ml-2 w-full">
                           <Label>{formatAmount(item.january_usage)}</Label>
                           <div className="h-5 ml-2 mr-2 -mt-0.5 border border-black"></div>
@@ -429,7 +429,7 @@ export function DepartmentCreditLimit() {
               <div className="w-full border-t mt-2"></div>
               <div className="flex w-full mt-5 space-y-7">
                 <Label className="font-bold text-lg">Usage:</Label>
-                <div className="flex ml-28 w-full">
+                <div className="flex ml-32 w-full">
                   <div className="flex w-full">
                     <Label className="font-bold">April </Label>
                   </div>
@@ -456,7 +456,7 @@ export function DepartmentCreditLimit() {
                       <Label className="font-bold w-44 overflow-auto mr-2">
                         {item.department}
                       </Label>
-                      <div className="flex w-full">
+                      <div className="flex ml-6 w-full">
                         <div className="flex -ml-4 w-full">
                           <Label>{formatAmount(item.april_usage)} </Label>
                           <div className="h-5 ml-2 mr-2 -mt-0.5 border border-black"></div>
@@ -621,7 +621,7 @@ export function DepartmentCreditLimit() {
               <div className="w-full border-t mt-2"></div>
               <div className="flex w-full mt-5 space-y-7">
                 <Label className="font-bold text-lg">Usage:</Label>
-                <div className="flex ml-28 w-full">
+                <div className="flex ml-32 w-full">
                   <div className="flex w-full">
                     <Label className="font-bold">July </Label>
                   </div>
@@ -649,7 +649,7 @@ export function DepartmentCreditLimit() {
                       <Label className="font-bold w-44 overflow-auto mr-2">
                         {item.department}
                       </Label>
-                      <div className="flex w-full">
+                      <div className="flex ml-6 w-full">
                         <div className="flex -ml-6 w-full">
                           <Label>{formatAmount(item.july_usage)}</Label>
                           <div className="h-5 ml-2 mr-2 -mt-0.5 border border-black"></div>
@@ -814,7 +814,7 @@ export function DepartmentCreditLimit() {
               <div className="w-full border-t mt-2"></div>
               <div className="flex w-full mt-5 space-y-7">
                 <Label className="font-bold text-lg">Usage:</Label>
-                <div className="flex ml-28 w-full">
+                <div className="flex ml-32 w-full">
                   <div className="flex w-full">
                     <Label className="font-bold">October </Label>
                   </div>
@@ -843,7 +843,7 @@ export function DepartmentCreditLimit() {
                       <Label className="font-bold w-44 overflow-auto mr-2">
                         {item.department}
                       </Label>
-                      <div className="flex w-full">
+                      <div className="flex ml-10 w-full">
                         <div className="flex -ml-4 w-full">
                           <Label>{formatAmount(item.october_usage)}</Label>
                           <div className="h-5 ml-2 mr-2 -mt-0.5 border border-black"></div>
@@ -1009,6 +1009,7 @@ export function DepartmentCreditLimit() {
                             HR General Affairs
                           </SelectItem>
                           <SelectItem value="Marketing">Marketing</SelectItem>
+                          <SelectItem value="Compliance">Compliance</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

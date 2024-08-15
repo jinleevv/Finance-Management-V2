@@ -203,6 +203,9 @@ export function CreateAccount() {
                               <DropdownMenuRadioItem value="Marketing">
                                 Marketing
                               </DropdownMenuRadioItem>
+                              <DropdownMenuRadioItem value="Compliance">
+                                Compliance
+                              </DropdownMenuRadioItem>
                             </DropdownMenuRadioGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>
