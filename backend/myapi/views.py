@@ -494,7 +494,8 @@ class DeleteCardTransactions(APIView):
     def post(self, request):
         try:
             data = request.data
-
+            
+            userDepartment = data['userDepartment']
             data = data['rowsData']
             
             for i in range(len(data)):
@@ -505,7 +506,7 @@ class DeleteCardTransactions(APIView):
                 purpose = data[i]['original']['purpose']
                 first_name = data[i]['original']['first_name']
                 last_name = data[i]['original']['last_name']
-                department = data[i]['original']['department']
+                department = userDepartment
 
                 rows = TaxTransactionForm.objects.filter(trans_date=trans_date, billing_amount=billing_amount, merchant_name=merchant_name, category=category, purpose=purpose, first_name=first_name, last_name=last_name)
                 
@@ -556,12 +557,13 @@ class DeleteCardTransactions(APIView):
                     
                     departmentCreditLimitSet.save()
 
-                file_path = 'media/' + rows.values()[0]['img']
-                if os.path.exists(file_path):
-                    os.remove('media/' + rows.values()[0]['img'])
-                    rows.delete()
-                else:
-                    raise RuntimeError("Unable to delete the data") 
+                if rows.exists():
+                    file_path = 'media/' + rows.values()[0]['img']
+                    if os.path.exists(file_path):
+                        os.remove('media/' + rows.values()[0]['img'])
+                        rows.delete()
+                    else:
+                        raise RuntimeError("Unable to delete the data") 
 
             return Response({'message': "Successfully deleted provided data" }, status=status.HTTP_200_OK)
 

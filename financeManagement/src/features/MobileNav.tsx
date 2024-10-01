@@ -193,7 +193,7 @@ export function MobileNav() {
                   </SheetClose>
                 )}
               </div>
-              <div className="mt-72">
+              <div className="mt-48 -ml-4">
                 <Footer />
               </div>
             </nav>
